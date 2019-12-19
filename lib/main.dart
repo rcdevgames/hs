@@ -14,6 +14,7 @@ import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/welcome/splashscreen_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Load language local
   await allTranslations.init(await sessions.load("lang"));
   runApp(MyApp());
@@ -124,7 +125,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         title: 'House Solutions',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: customColor,
           primaryTextTheme: Typography().white,
           primaryIconTheme: IconThemeData(color: Colors.white)
         ),

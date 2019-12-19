@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   init() async {
     // var userData = await sessions.checkAuth();
     var userData = await sessions.load("lang");
+    print("Lang : $userData");
     await Future.delayed(const Duration(milliseconds: 3000));
 
     // Check User Session Exists

@@ -2,10 +2,14 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:housesolutions/bloc/home_bloc.dart';
+import 'package:housesolutions/bloc/order_bloc.dart';
+import 'package:housesolutions/bloc/user_bloc.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/view/home/home_page.dart';
 import 'package:housesolutions/view/home/order_page.dart';
 import 'package:housesolutions/view/home/user_page.dart';
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:rxdart/rxdart.dart';
 
 class LayoutPage extends StatefulWidget {
   @override
@@ -14,7 +18,7 @@ class LayoutPage extends StatefulWidget {
 
 class _LayoutPageState extends State<LayoutPage> {
   final _key = GlobalKey<ScaffoldState>();
-  final bloc = BlocProvider.getBloc<HomeBloc>();
+  final bloc = BlocProvider.getBloc<LayoutBloc>();
   final pages = [
     new HomePage(),
     new OrderPage(),
@@ -24,7 +28,10 @@ class _LayoutPageState extends State<LayoutPage> {
   @override
   void dispose() {
     super.dispose();
-    bloc.dispose();
+    BlocProvider.disposeBloc<HomeBloc>();
+    BlocProvider.disposeBloc<OrderBloc>();
+    BlocProvider.disposeBloc<UserBloc>();
+    BlocProvider.disposeBloc<LayoutBloc>();
   }
 
   @override
@@ -33,17 +40,17 @@ class _LayoutPageState extends State<LayoutPage> {
       key: _key,
       body: StreamBuilder<int>(
         initialData: 0,
-        stream: null,
+        stream: bloc.getIndex,
         builder: (context, snapshot) {
           return pages[snapshot.data];
         }
       ),
       bottomNavigationBar: StreamBuilder<int>(
         initialData: 0,
-        stream: null,
+        stream: bloc.getIndex,
         builder: (context, snapshot) {
           return BottomNavigationBar(
-            onTap: (i) => null,
+            onTap: bloc.setIndex,
             currentIndex: snapshot.data,
             items: [
               BottomNavigationBarItem(
@@ -64,4 +71,14 @@ class _LayoutPageState extends State<LayoutPage> {
       ),
     );
   }
+}
+
+class LayoutBloc extends BlocBase {
+  final _index = BehaviorSubject<int>.seeded(0);
+  //Getter
+  Stream<int> get getIndex => _index.stream;
+  //Setter
+  Function(int) get setIndex => _index.sink.add;
+  //Function
+
 }

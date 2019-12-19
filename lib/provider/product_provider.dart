@@ -23,14 +23,14 @@ class ProductProvider {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       if (jsonDecode(response.body)['message'] is List<dynamic>) {
-      }else if(response.statusCode == 401) {
-        throw Exception("Unauthorized");
         return compute(searchWorkerFromJson, jsonEncode(SearchWorker.fromJson({
           "page": 1,
           "limit": 10,
           "paging": 1,
           "data": []
         })));
+      }else if(response.statusCode == 401) {
+        throw Exception("Unauthorized");
       }
       return compute(searchWorkerFromJson, api.getContent(response.body));
     } else {

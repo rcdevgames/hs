@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:housesolutions/util/all_translation.dart';
+import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
 
 class SelectLangPage extends StatefulWidget {
@@ -31,7 +32,6 @@ class _SelectLangPageState extends State<SelectLangPage> {
         elevation: (lang == code)?2:10,
         onPressed: () async {
           await allTranslations.setNewLanguage(code);
-          sessions.save("lang", code);
           setState(() => lang = code);
         },
         child: Padding(
@@ -75,7 +75,10 @@ class _SelectLangPageState extends State<SelectLangPage> {
                 ),
               ),
               RaisedButton(
-                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil("/welcome", (Route<dynamic> route) => false),
+                onPressed: () {
+                  sessions.save("lang", lang);
+                  navService.navigateReplaceTo("/welcome");
+                },
                 child: SizedBox(
                   width: double.infinity,
                   child: Center(child: Text(allTranslations.text("NEXT")))
