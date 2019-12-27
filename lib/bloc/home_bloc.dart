@@ -18,12 +18,12 @@ class HomeBloc extends BlocBase {
   final _user = BehaviorSubject<User>();
   final _loading = BehaviorSubject<bool>.seeded(false);
   final _top = BehaviorSubject<bool>.seeded(false);
+  final _expanded = BehaviorSubject<bool>.seeded(false);
 
   //Initialize
   HomeBloc(){
     scrollCtrl = new ScrollController();
     scrollCtrl.addListener(scrollListener);
-    init();
   }
 
   @override
@@ -35,6 +35,17 @@ class HomeBloc extends BlocBase {
     _user.close();
     _loading.close();
     _top.close();
+    _expanded.close();
+  }
+
+  void disposed() {
+    _categories.sink.add(null);
+    _banner.sink.add(null);
+    _promote.sink.add(null);
+    _user.sink.add(null);
+    _loading.sink.add(false);
+    _top.sink.add(false);
+    _expanded.sink.add(false);
   }
 
   //Getter
@@ -44,6 +55,7 @@ class HomeBloc extends BlocBase {
   Stream<User> get getUser => _user.stream;
   Stream<bool> get isLoading => _loading.stream;
   Stream<bool> get isTOP => _top.stream;
+  Stream<bool> get isExpanded => _expanded.stream;
 
   //Setter
   Function(List<Categories>) get setCategories => _categories.sink.add;
@@ -52,6 +64,7 @@ class HomeBloc extends BlocBase {
   Function(User) get setUser => _user.sink.add;
   Function(bool) get setLoading => _loading.sink.add;
   Function(bool) get setTOP => _top.sink.add;
+  Function(bool) get setExpanded => _expanded.sink.add;
 
   //Function
   Future init() async {

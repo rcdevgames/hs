@@ -82,7 +82,7 @@ class AuthBloc extends BlocBase {
       setTNC(await repo.getTNC());
     } catch (e) {
       print("TNC : " + e.toString());
-      _tnc.sink.addError(e.toString().replaceAll("Exception : ", ""));
+      _tnc.sink.addError(e.toString().replaceAll("Exception: ", ""));
     }
   }
 
@@ -131,7 +131,7 @@ class AuthBloc extends BlocBase {
         showAlert(
           context: key.currentContext,
           title: "Login Error",
-          body: e.toString().replaceAll("Exception : ", "")
+          body: e.toString().replaceAll("Exception: ", "")
         );
       }
     }
@@ -161,7 +161,7 @@ class AuthBloc extends BlocBase {
         showAlert(
           context: key.currentContext,
           title: "Registrasi Error",
-          body: e.toString().replaceAll("Exception : ", "")
+          body: e.toString().replaceAll("Exception: ", "")
         );
       }
     }
@@ -192,7 +192,7 @@ class AuthBloc extends BlocBase {
         showAlert(
           context: key.currentContext,
           title: "Lupa Password Error",
-          body: e.toString().replaceAll("Exception : ", "")
+          body: e.toString().replaceAll("Exception: ", "")
         );
       }
     }
@@ -247,7 +247,7 @@ class AuthBloc extends BlocBase {
       showAlert(
         context: context,
         title: "Login Socmed Error",
-        body: e.toString().replaceAll("Exception : ", "")
+        body: e.toString().replaceAll("Exception: ", "")
       );
     }
   }  

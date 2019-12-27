@@ -5,6 +5,8 @@ import 'package:housesolutions/bloc/home_bloc.dart';
 import 'package:housesolutions/bloc/order_bloc.dart';
 import 'package:housesolutions/bloc/user_bloc.dart';
 import 'package:housesolutions/util/all_translation.dart';
+import 'package:housesolutions/util/nav_service.dart';
+import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/home/home_page.dart';
 import 'package:housesolutions/view/home/order_page.dart';
 import 'package:housesolutions/view/home/user_page.dart';
@@ -19,6 +21,10 @@ class LayoutPage extends StatefulWidget {
 class _LayoutPageState extends State<LayoutPage> {
   final _key = GlobalKey<ScaffoldState>();
   final bloc = BlocProvider.getBloc<LayoutBloc>();
+  final homeBloc = BlocProvider.getBloc<HomeBloc>();
+  final orderBloc = BlocProvider.getBloc<OrderBloc>();
+  final userBloc = BlocProvider.getBloc<UserBloc>();
+
   final pages = [
     new HomePage(),
     new OrderPage(),
@@ -26,12 +32,29 @@ class _LayoutPageState extends State<LayoutPage> {
   ];
 
   @override
+  void initState() { 
+    super.initState();
+    homeBloc.init();
+    init();
+  }
+
+  @override
   void dispose() {
     super.dispose();
-    BlocProvider.disposeBloc<HomeBloc>();
-    BlocProvider.disposeBloc<OrderBloc>();
-    BlocProvider.disposeBloc<UserBloc>();
-    BlocProvider.disposeBloc<LayoutBloc>();
+    homeBloc.disposed();
+    orderBloc.disposed();
+    userBloc.disposed();
+    bloc.setIndex(0);
+  }
+
+  init() async {
+    var loggedIn = await sessions.checkAuth();
+    if (loggedIn) {
+      orderBloc.fetchOrders();
+      orderBloc.fetchOwnWorker();
+      orderBloc.fetchSummary();
+      userBloc.fetchUser();
+    }
   }
 
   @override
@@ -75,10 +98,16 @@ class _LayoutPageState extends State<LayoutPage> {
 
 class LayoutBloc extends BlocBase {
   final _index = BehaviorSubject<int>.seeded(0);
-  //Getter
   Stream<int> get getIndex => _index.stream;
-  //Setter
-  Function(int) get setIndex => _index.sink.add;
-  //Function
+  void setIndex(int index) async {
+    if (index > 0) {
+      var loggedIn = await sessions.checkAuth();
+      if (!loggedIn) {
+        navService.navigateTo("/login");
+        return;
+      }
+    }
+    _index.sink.add(index);
+  }
 
 }

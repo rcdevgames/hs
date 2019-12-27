@@ -21,30 +21,26 @@ class HomePage extends StatelessWidget {
 
   Widget menuButton({@required String imageUrl, @required String title, void Function() onPressed, bool isPremium = false}) {
     return InkWell(
-      child: SizedBox(
-        height: 80,
-        width: 60,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: SizedBox(
+          width: 60,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
                 width: 50, height: 50,
-                child: Stack(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      // fit: BoxFit.cover,
-                      placeholder: (BuildContext context, String data) => SizedBox(child: LoadingBlock(Theme.of(context).primaryColor), width: 50, height: 50),
-                      width: 50, height: 50
-                    ),
-                  ],
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  // fit: BoxFit.cover,
+                  placeholder: (BuildContext context, String data) => SizedBox(child: LoadingBlock(Theme.of(context).primaryColor), width: 50, height: 50),
+                  width: 50, height: 50
                 ),
-              )
-            ),
-            Expanded(flex:1, child: Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700), textAlign: TextAlign.center))
-          ],
+              ),
+              SizedBox(height: 5),
+              Text(title, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700), textAlign: TextAlign.center)
+            ],
+          ),
         ),
       ),
       onTap: onPressed,
@@ -138,8 +134,7 @@ class HomePage extends StatelessWidget {
               child: Text(allTranslations.text("OUR_SERVICE"), style: TextStyle(fontWeight: FontWeight.w700)),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              width: wp(100),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: StreamBuilder<List<Categories>>(
                 stream: bloc.getCategories,
                 builder: (context, snapshot) {
@@ -149,33 +144,33 @@ class HomePage extends StatelessWidget {
                       children: <Widget>[
                         Column(
                           children: <Widget>[
-                            Text("Regular", style: TextStyle(fontWeight: FontWeight.w700)),
+                            Text("Regular", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
                             SizedBox(height: 5),
-                          ]..addAll(snapshot.data.map((cat) => menuButton(
-                            imageUrl: cat.categoryImage,
-                            title: cat.categoryDesc,
+                          ]..addAll(List.generate(3, (i) => menuButton(
+                            imageUrl: snapshot.data[i].categoryImage,
+                            title: snapshot.data[i].categoryDesc,
                             isPremium: false,
                             onPressed: () => null
                           )).toList()),
                         ),
                         Column(
                           children: <Widget>[
-                            Text("PP/Harian", style: TextStyle(fontWeight: FontWeight.w700)),
+                            Text("PP/Harian", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
                             SizedBox(height: 5),
-                          ]..addAll(snapshot.data.map((cat) => menuButton(
-                            imageUrl: cat.categoryImage,
-                            title: cat.categoryDesc,
+                          ]..addAll(List.generate(3, (i) => menuButton(
+                            imageUrl: snapshot.data[i].categoryImage,
+                            title: snapshot.data[i].categoryDesc,
                             isPremium: false,
                             onPressed: () => null
                           )).toList()),
                         ),
                         Column(
                           children: <Widget>[
-                            Text("Online", style: TextStyle(fontWeight: FontWeight.w700)),
+                            Text("Online", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
                             SizedBox(height: 5),
-                          ]..addAll(snapshot.data.map((cat) => menuButton(
-                            imageUrl: cat.categoryImage,
-                            title: cat.categoryDesc,
+                          ]..addAll(List.generate(3, (i) => menuButton(
+                            imageUrl: snapshot.data[i].categoryImage,
+                            title: snapshot.data[i].categoryDesc,
                             isPremium: false,
                             onPressed: () => null
                           )).toList()),
@@ -183,25 +178,72 @@ class HomePage extends StatelessWidget {
                         
                       ],
                     );
-                    // return GridView.builder(
-                    //   physics: NeverScrollableScrollPhysics(),
-                    //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                    //   itemCount: snapshot.data.length,
-                    //   itemBuilder: (ctx, i) => menuButton(
-                    //     imageUrl: snapshot.data[i].categoryImage,
-                    //     title: snapshot.data[i].categoryDesc,
-                    //     isPremium: snapshot.data[i].idPacket == 1,
-                    //     onPressed: () async {
-                    //       var auth = await sessions.checkAuth();
-                    //       if (!auth) return Navigator.of(context).pushNamed("/login-customer");
-                    //       navService.navigateTo("/product-list", snapshot.data[i]);
-                    //     }
-                    //   ),
-                    // );
                   }
                   return LoadingBlock(Theme.of(context).primaryColor);
                 }
               ), 
+            ),
+            StreamBuilder<bool>(
+              initialData: false,
+              stream: bloc.isExpanded,
+              builder: (context, snapshot) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  height: !snapshot.data ? 0.0:null,
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  child: StreamBuilder<List<Categories>>(
+                    stream: bloc.getCategories,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Column(
+                              children: List.generate(snapshot.data.length -3, (i) => menuButton(
+                                imageUrl: snapshot.data[i+3].categoryImage,
+                                title: snapshot.data[i+3].categoryDesc,
+                                isPremium: false,
+                                onPressed: () => null
+                              )).toList(),
+                            ),
+                            Column(
+                              children: List.generate(snapshot.data.length -3, (i) => menuButton(
+                                imageUrl: snapshot.data[i+3].categoryImage,
+                                title: snapshot.data[i+3].categoryDesc,
+                                isPremium: false,
+                                onPressed: () => null
+                              )).toList(),
+                            ),
+                            Column(
+                              children: List.generate(snapshot.data.length -3, (i) => menuButton(
+                                imageUrl: snapshot.data[i+3].categoryImage,
+                                title: snapshot.data[i+3].categoryDesc,
+                                isPremium: false,
+                                onPressed: () => null
+                              )).toList(),
+                            ),
+                            
+                          ],
+                        );
+                      }
+                      return LoadingBlock(Theme.of(context).primaryColor);
+                    }
+                  ), 
+                );
+              }
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: StreamBuilder<bool>(
+                initialData: false,
+                stream: bloc.isExpanded,
+                builder: (context, snapshot) {
+                  return FlatButton(
+                    child: Text(!snapshot.data ? "Selengkapnya":"Sembunyikan", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                    onPressed: () => bloc.setExpanded(!snapshot.data),
+                  );
+                }
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,
