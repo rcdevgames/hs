@@ -33,6 +33,7 @@ class OrderBloc extends BlocBase {
   final _banks = BehaviorSubject<List<Bank>>();
   final _path = BehaviorSubject<String>();
   final _image = BehaviorSubject<File>();
+  final _paymentMethod = BehaviorSubject<String>();
 
   @override
   void dispose() { 
@@ -48,6 +49,7 @@ class OrderBloc extends BlocBase {
     _banks.close();
     _path.close();
     _image.close();
+    _paymentMethod.close();
   }
 
   void disposed() {
@@ -62,6 +64,7 @@ class OrderBloc extends BlocBase {
     _banks.sink.add(null);
     _path.sink.add(null);
     _image.sink.add(null);
+    _paymentMethod.sink.add(null);
   }
 
   //Getter
@@ -75,6 +78,7 @@ class OrderBloc extends BlocBase {
   Stream<List<Bank>> get getBanks => _banks.stream;
   Stream<String> get getPath => _path.stream;
   Stream<File> get getImage => _image.stream;
+  Stream<String> get getPaymnetMethod => _paymentMethod.stream;
 
   //Setter
   Function(prefix0.Summary) get setSummary => _summary.sink.add;
@@ -88,6 +92,7 @@ class OrderBloc extends BlocBase {
   Function(List<Bank>) get setBank => _banks.sink.add;
   Function(String) get setPath => _path.sink.add;
   Function(File) get setImage => _image.sink.add;
+  Function(String) get setPaymentMethod => _paymentMethod.sink.add;
 
   //Function
   Future fetchBank() async {
