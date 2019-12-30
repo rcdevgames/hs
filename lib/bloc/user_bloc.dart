@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cryptoutils/cryptoutils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:housesolutions/model/district.dart';
@@ -28,6 +29,7 @@ class UserBloc extends BlocBase {
   final _password_old = BehaviorSubject<String>();
   final _images = BehaviorSubject<File>();
   final _image64 = BehaviorSubject<String>();
+  final _hint = BehaviorSubject<bool>.seeded(false);
 
   @override
   void dispose() { 
@@ -46,6 +48,7 @@ class UserBloc extends BlocBase {
     _password_old.close();
     _images.close();
     _image64.close();
+    _hint.close();
   }
 
   void disposed() {
@@ -63,6 +66,7 @@ class UserBloc extends BlocBase {
     _password_old.sink.add(null);
     _images.sink.add(null);
     _image64.sink.add(null);
+    _hint.close();
   }
 
   //Getter
@@ -73,6 +77,7 @@ class UserBloc extends BlocBase {
   Stream<int> get getProvince => _province.stream;
   Stream<int> get getDistrict => _district.stream;
   Stream<File> get getImage => _images.stream;
+  Stream<bool> get getHint => _hint.stream;
 
   //Setter
   Function(String) get setName => _name.sink.add;
@@ -86,6 +91,7 @@ class UserBloc extends BlocBase {
   Function(File) get setImage => _images.sink.add;
   Function(bool) get setLoading => _loading.sink.add;
   Function(User) get setUser => _user.sink.add;
+  Function(bool) get setHint => _hint.sink.add;
 
   //Function
   Future fetchUser() async {
@@ -98,6 +104,22 @@ class UserBloc extends BlocBase {
         return navService.navigateReplaceTo("/login", "unauthorized");
       }
       _user.sink.addError(e.toString().replaceAll("Exception: ", ""));
+    }
+  }
+
+  Future fetchProvince() async {
+    try {
+      _provinces.sink.add(await repo.fetchProvince());
+    } catch (e) {
+      print("Province : " + e.toString());
+    }
+  }
+  
+  Future fetchDistrict(int idProvince) async {
+    try {
+      _districts.sink.add(await repo.fetchDistrict(idProvince));
+    } catch (e) {
+      print("District : " + e.toString());
     }
   }
 
@@ -176,6 +198,37 @@ class UserBloc extends BlocBase {
         );
       }
     }
+  }
+
+  showActionSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoActionSheet(
+          title: Text("Pilih Sumber Gambar"),
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
+          ),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              onPressed: () async {
+                await Navigator.pop(context);
+                changeAvatar(ImageSource.camera);
+              },
+              child: Text("Camera"),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () async {
+                await Navigator.pop(context);
+                changeAvatar(ImageSource.gallery);
+              },
+              child: Text("Galery"),
+            ),
+          ],
+        );
+      }
+    );
   }
 
   void changeAvatar(ImageSource source) async {

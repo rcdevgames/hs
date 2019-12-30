@@ -277,7 +277,7 @@ class HomePage extends StatelessWidget {
                             height: hp(27),
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: NetworkImage(promote.promoteBanner),
+                                image: CachedNetworkImageProvider(promote.promoteBanner),
                                 fit: BoxFit.cover
                               )
                             ),
@@ -292,7 +292,7 @@ class HomePage extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(promote.promoteTitle, style: TextStyle(fontSize: wp(2.3), fontWeight: FontWeight.w800, color: Colors.white)),
+                                      Text(promote.promoteTitle, style: TextStyle(fontSize: wp(3.5), fontWeight: FontWeight.w800, color: Colors.white)),
                                     ],
                                   ),
                                 )

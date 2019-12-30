@@ -7,7 +7,7 @@ import 'package:housesolutions/util/api.dart';
 
 class ProductProvider {
   Future<SearchWorker> fetchSearchWorkers(int idCategory, int idProvince, int idDistrict, int page, int startSalary, int endSalary, num startRating, num endRating, String stayIn, String regular) async {
-    final response = await api.post("/customer/search_v2", auth: true, body: {
+    final response = await api.post("search_v2", ver: "", auth: true, body: {
       "id_category" : idCategory == null ? "all":idCategory,
       "id_province" : idProvince == null ? "all":idProvince,
       "id_district" : idDistrict == null ? []:[idDistrict],

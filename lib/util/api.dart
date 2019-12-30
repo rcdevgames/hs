@@ -16,10 +16,10 @@ class Api {
     return client.get("http://api.housesolutionsindonesia.com/api/v1$_endpoint$authorization", headers: requestHeaders);
   }
   
-  Future<Response> post(String _endpoint, {String endpoint, bool auth = false, Map<String, dynamic> body}) async {
+  Future<Response> post(String _endpoint, {String endpoint, bool auth = false, Map<String, dynamic> body, String ver = "v1"}) async {
     var token = await sessions.load("token");
     String authorization = (auth && token != null ? "/$token":"") + (endpoint != null ? "/$endpoint":"") + "?lang=${allTranslations.currentLanguage}";
-    return client.post("http://api.housesolutionsindonesia.com/api/v1$_endpoint$authorization", headers: requestHeaders, body: jsonEncode(body));
+    return client.post("http://api.housesolutionsindonesia.com/api/$ver$_endpoint$authorization", headers: requestHeaders, body: jsonEncode(body));
   }
   
   Future<Response> FCM(Map<String, dynamic> body) async {

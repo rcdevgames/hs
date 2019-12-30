@@ -105,7 +105,8 @@ class UserPage extends StatelessWidget {
                     profileData(context, key: allTranslations.text("CITY"), value: snapshot.data.districtName),
                     profileData(context, key: allTranslations.text("PROVINCE"), value: snapshot.data.provinceName),
                     InkWell(
-                      onTap: () => navService.navigateTo("/update-profile"),
+                      // onTap: () => print(snapshot.data.toJson()),
+                      onTap: () => navService.navigateTo("/user-edit", snapshot.data),
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         width: double.infinity,
