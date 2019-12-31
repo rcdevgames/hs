@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,7 @@ class ProductListPage extends StatefulWidget {
   Categories category;
   String stayIn;
   String regular;
+  ProductListPage(this.category, this.stayIn, this.regular);
 
   @override
   _ProductListPageState createState() => _ProductListPageState();
@@ -31,13 +34,13 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   void initState() { 
     super.initState();
-    
+    bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular);
   }
 
   @override
   void dispose() {
+    bloc.setWorkers(null);
     super.dispose();
-
   }
 
   @override
@@ -59,7 +62,8 @@ class _ProductListPageState extends State<ProductListPage> {
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        title: Text(""),
+        title: Text(widget.category.categoryDesc),
+        brightness: Platform.isIOS ? Brightness.light:Brightness.dark,
       ),
       body: StreamBuilder<SearchWorker>(
         stream: bloc.getWorkers,
@@ -69,7 +73,7 @@ class _ProductListPageState extends State<ProductListPage> {
               return NotFound(
                 key: _refreshKey,
                 onRefresh: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular),
-                image_asset: ""
+                image_asset: "assets/Images/empty_worker.png"
               );
             }
 
@@ -189,16 +193,19 @@ class _ProductListPageState extends State<ProductListPage> {
         }
       ),
       floatingActionButton: SafeArea(
-        child: FloatingActionButton.extended(
-          label: Icon(FontAwesomeIcons.filter),
-          icon: Text("Filter"),
-          onPressed: () async {
-            var data = await navService.navigateTo("/product-filter");
-            if (data != null) {
-              bloc.setWorkers(null);
-              bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular);
-            }
-          },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: FloatingActionButton.extended(
+            icon: Icon(FontAwesomeIcons.filter, color: Colors.white, size: 16),
+            label: Text("Filter", style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              var data = await navService.navigateTo("/product-filter");
+              if (data != null) {
+                bloc.setWorkers(null);
+                bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular);
+              }
+            },
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

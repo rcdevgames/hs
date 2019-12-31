@@ -9,6 +9,7 @@ import 'package:housesolutions/model/district.dart';
 import 'package:housesolutions/model/province.dart';
 import 'package:housesolutions/model/user_model.dart';
 import 'package:housesolutions/provider/repository.dart';
+import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,6 +31,7 @@ class UserBloc extends BlocBase {
   final _images = BehaviorSubject<File>();
   final _image64 = BehaviorSubject<String>();
   final _hint = BehaviorSubject<bool>.seeded(false);
+  final _tnc = BehaviorSubject<String>();
 
   @override
   void dispose() { 
@@ -49,6 +51,7 @@ class UserBloc extends BlocBase {
     _images.close();
     _image64.close();
     _hint.close();
+    _tnc.close();
   }
 
   void disposed() {
@@ -66,7 +69,8 @@ class UserBloc extends BlocBase {
     _password_old.sink.add(null);
     _images.sink.add(null);
     _image64.sink.add(null);
-    _hint.close();
+    _hint.sink.add(false);
+    _tnc.sink.add(null);
   }
 
   //Getter
@@ -78,6 +82,7 @@ class UserBloc extends BlocBase {
   Stream<int> get getDistrict => _district.stream;
   Stream<File> get getImage => _images.stream;
   Stream<bool> get getHint => _hint.stream;
+  Stream<String> get getTNC => _tnc.stream;
 
   //Setter
   Function(String) get setName => _name.sink.add;
@@ -92,6 +97,7 @@ class UserBloc extends BlocBase {
   Function(bool) get setLoading => _loading.sink.add;
   Function(User) get setUser => _user.sink.add;
   Function(bool) get setHint => _hint.sink.add;
+  Function(String) get setTNC => _tnc.sink.add;
 
   //Function
   Future fetchUser() async {
@@ -120,6 +126,15 @@ class UserBloc extends BlocBase {
       _districts.sink.add(await repo.fetchDistrict(idProvince));
     } catch (e) {
       print("District : " + e.toString());
+    }
+  }
+
+  Future fetchTNC() async {
+    try {
+      setTNC(await repo.getTNC());
+    } catch (e) {
+      print("TNC : " + e.toString());
+      _tnc.sink.addError(e.toString().replaceAll("Exception: ", ""));
     }
   }
 
@@ -216,14 +231,14 @@ class UserBloc extends BlocBase {
                 await Navigator.pop(context);
                 changeAvatar(ImageSource.camera);
               },
-              child: Text("Camera"),
+              child: Text(allTranslations.text("GETCAMERA"))
             ),
             CupertinoActionSheetAction(
               onPressed: () async {
                 await Navigator.pop(context);
                 changeAvatar(ImageSource.gallery);
               },
-              child: Text("Galery"),
+              child: Text(allTranslations.text("GETGALERI")),
             ),
           ],
         );

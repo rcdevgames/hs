@@ -12,6 +12,7 @@ import 'package:housesolutions/model/user_model.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
+import 'package:housesolutions/view/product/product_list_page.dart';
 import 'package:housesolutions/widget/loading.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
@@ -150,7 +151,7 @@ class HomePage extends StatelessWidget {
                             imageUrl: snapshot.data[i].categoryImage,
                             title: snapshot.data[i].categoryDesc,
                             isPremium: false,
-                            onPressed: () => null
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i], "yes", "yes")))
                           )).toList()),
                         ),
                         Column(
@@ -161,7 +162,7 @@ class HomePage extends StatelessWidget {
                             imageUrl: snapshot.data[i].categoryImage,
                             title: snapshot.data[i].categoryDesc,
                             isPremium: false,
-                            onPressed: () => null
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i], "no", "yes")))
                           )).toList()),
                         ),
                         Column(
@@ -172,7 +173,7 @@ class HomePage extends StatelessWidget {
                             imageUrl: snapshot.data[i].categoryImage,
                             title: snapshot.data[i].categoryDesc,
                             isPremium: false,
-                            onPressed: () => null
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i], "all", "no")))
                           )).toList()),
                         ),
                         
@@ -203,7 +204,7 @@ class HomePage extends StatelessWidget {
                                 imageUrl: snapshot.data[i+3].categoryImage,
                                 title: snapshot.data[i+3].categoryDesc,
                                 isPremium: false,
-                                onPressed: () => null
+                                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i+3], "yes", "yes")))
                               )).toList(),
                             ),
                             Column(
@@ -211,7 +212,7 @@ class HomePage extends StatelessWidget {
                                 imageUrl: snapshot.data[i+3].categoryImage,
                                 title: snapshot.data[i+3].categoryDesc,
                                 isPremium: false,
-                                onPressed: () => null
+                                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i+3], "no", "yes")))
                               )).toList(),
                             ),
                             Column(
@@ -219,7 +220,7 @@ class HomePage extends StatelessWidget {
                                 imageUrl: snapshot.data[i+3].categoryImage,
                                 title: snapshot.data[i+3].categoryDesc,
                                 isPremium: false,
-                                onPressed: () => null
+                                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductListPage(snapshot.data[i+3], "all", "no")))
                               )).toList(),
                             ),
                             
@@ -269,8 +270,7 @@ class HomePage extends StatelessWidget {
                     if (snapshot.hasData) {
                       return Column(
                         children: snapshot.data.map((promote) => InkWell(
-                          // onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => DetailPromote(promote))),
-                          onTap: () => navService.navigateTo("/detail-promote", promote),
+                          onTap: () => navService.navigateTo("/news-detail", promote),
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 15),
                             width: double.infinity,

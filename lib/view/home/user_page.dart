@@ -76,10 +76,12 @@ class UserPage extends StatelessWidget {
                         return Image.file(image.data, fit: BoxFit.cover, alignment: Alignment.topCenter);
                       }
 
-                      if (snapshot.data.customerImage == null) {
+                      if (snapshot.data.customerImage != null) {
                         return CachedNetworkImage(
                           imageUrl: snapshot.data.customerImage,
-                          fit: BoxFit.cover, alignment: Alignment.topCenter
+                          fit: BoxFit.cover, 
+                          alignment: Alignment.topCenter,
+                          height: hp(35),
                         );
                       }
 
@@ -87,12 +89,6 @@ class UserPage extends StatelessWidget {
                         child: Text(initialName(snapshot.data.customerName), textAlign: TextAlign.center, style: TextStyle(fontSize: wp(30), color: Colors.white, fontWeight: FontWeight.bold)),
                       );
                     }
-                  ),
-                ),
-                Container(
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorDark
                   ),
                 ),
                 Column(

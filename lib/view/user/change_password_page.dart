@@ -99,6 +99,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> with Validation
           ),
         ),
         StreamBuilder<bool>(
+          initialData: false,
           stream: bloc.isLoading,
           builder: (context, snapshot) {
             return Loading(snapshot.data);

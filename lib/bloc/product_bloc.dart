@@ -62,8 +62,8 @@ class ProductBloc extends BlocBase {
     try {
       var result = await repo.fetchSearchWorkers(
         idCategory, 
-        _province.value??"all", 
-        _district.value??[],
+        _province.value, 
+        _district.value,
         page: page,
         startRating: _rating.value[0],
         endRating: _rating.value[1],
