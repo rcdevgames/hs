@@ -8,12 +8,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:housesolutions/bloc/product_bloc.dart';
 import 'package:housesolutions/model/category.dart';
 import 'package:housesolutions/model/search_worker.dart';
+import 'package:housesolutions/r.dart';
+import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
+import 'package:housesolutions/view/product/product_detail_page.dart';
 import 'package:housesolutions/widget/error_page.dart';
 import 'package:housesolutions/widget/loading.dart';
 import 'package:housesolutions/widget/notfound.dart';
 import 'package:indonesia/indonesia.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
+import 'package:lazy_load_refresh_indicator/lazy_load_refresh_indicator.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -39,7 +42,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   void dispose() {
-    bloc.setWorkers(null);
+    BlocProvider.disposeBloc<ProductBloc>();
     super.dispose();
   }
 
@@ -59,10 +62,20 @@ class _ProductListPageState extends State<ProductListPage> {
       );
     }
 
+    String categoryName(String stayIn, String regular) {
+      if (stayIn == "yes" && regular == "yes") {
+        return "Regular";
+      }else if (stayIn == "no" && regular == "yes") {
+        return "PP/Harian";
+      }else if(stayIn == "all" && regular == "no") {
+        return "Online";
+      }
+    }
+
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        title: Text(widget.category.categoryDesc),
+        title: Text("${widget.category.categoryDesc} (${categoryName(widget.stayIn, widget.regular)})"),
         brightness: Platform.isIOS ? Brightness.light:Brightness.dark,
       ),
       body: StreamBuilder<SearchWorker>(
@@ -70,112 +83,91 @@ class _ProductListPageState extends State<ProductListPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.data.length == 0) {
-              return NotFound(
-                key: _refreshKey,
-                onRefresh: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular),
-                image_asset: "assets/Images/empty_worker.png"
+              // return NotFound(
+              //   key: _refreshKey,
+              //   onRefresh: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular),
+              //   image_asset: "assets/Images/empty_worker.png"
+              // );
+              return Center(
+                child: Image.asset(R.assetsImagesNotFound, scale: 3.5),
               );
             }
 
-            return RefreshIndicator(
-              key: _refreshKey,
+            return LazyLoadRefreshIndicator(
               onRefresh: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular),
-              child: SingleChildScrollView(
-                child: LazyLoadScrollView(
-                  onEndOfPage: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular, snapshot.data.page + 1),
-                  child: GridView.count(
-                    primary: true,
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.80,
-                    children: snapshot.data.data.map((worker) {
-                      return InkWell(
-                        // onTap: () => bloc.openDetail(productBloc.workers.data[i].idWorker, widget.category),
-                        child: Card(
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            child: Column(
+              onEndOfPage: () => snapshot.data.page <= snapshot.data.paging ? null : bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular, snapshot.data.page + 1),
+              child: GridView.count(
+                primary: true,
+                crossAxisCount: 2,
+                childAspectRatio: 0.80,
+                children: snapshot.data.data.map((worker) {
+                  return InkWell(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailPage(worker.idWorker, widget.category))),
+                    child: Card(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+                            Stack(
                               children: <Widget>[
-                                Builder(
-                                  builder: (context) {
-                                    if (worker.stayIn != true) {
-                                      return Banner(
-                                        location: BannerLocation.topStart,
-                                        message: "Pulang Pergi",
-                                        child: Stack(
-                                          children: <Widget>[
-                                            Container(
-                                              color: Theme.of(context).primaryColor,
-                                              height: hp(20),
-                                              width: double.infinity,
-                                              child: avatarName(worker.workerName),
-                                            ),
-                                            SizedBox(
-                                              height: hp(20),
-                                              width: double.infinity,
-                                              child: CachedNetworkImage(
-                                                imageUrl: worker.workerProfile,
-                                                placeholder: (ctx, id) => avatarName(worker.workerName),
-                                                errorWidget: (ctx, id, o) => avatarName(worker.workerName),
-                                                fit: BoxFit.cover,
-                                                alignment: AlignmentDirectional.topCenter,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }else{
-                                      return Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            color: Theme.of(context).primaryColor,
-                                            height: hp(20),
-                                            width: double.infinity,
-                                            child: avatarName(worker.workerName),
-                                          ),
-                                          SizedBox(
-                                            height: hp(20),
-                                            width: double.infinity,
-                                            child: CachedNetworkImage(
-                                              imageUrl: worker.workerProfile,
-                                              placeholder: (ctx, id) => avatarName(worker.workerName),
-                                              errorWidget: (ctx, id, o) => avatarName(worker.workerName),
-                                              fit: BoxFit.cover,
-                                              alignment: AlignmentDirectional.topCenter,
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    }
-                                  }
+                                Container(
+                                  color: Theme.of(context).primaryColor,
+                                  height: hp(23),
+                                  width: double.infinity,
+                                  child: avatarName(worker.workerName),
                                 ),
-                                SizedBox(height: 5),
-                                Text("${worker.workerName} (${worker.workerAge})", textAlign: TextAlign.center),
-                                Text(worker.districtName, style: TextStyle(fontSize: 10)),
-                                Expanded(
-                                  child: SizedBox(),
+                                SizedBox(
+                                  height: hp(23),
+                                  width: double.infinity,
+                                  child: CachedNetworkImage(
+                                    imageUrl: worker.workerProfile,
+                                    placeholder: (ctx, id) => avatarName(worker.workerName),
+                                    errorWidget: (ctx, id, o) => avatarName(worker.workerName),
+                                    fit: BoxFit.cover,
+                                    alignment: AlignmentDirectional.topCenter,
+                                  ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(rupiah(worker.workerSalary), style: TextStyle(fontSize: 12, color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
-                                    RatingBarIndicator(
-                                      rating: double.parse(worker.workerRating),
-                                      itemSize: 13,
-                                      itemBuilder: (context, index) => Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                    )
-                                  ],
-                                )
                               ],
                             ),
-                          ),
-                        )
-                      );
-                    }).toList(),
-                  ),
-                ),
+                            SizedBox(height: 5),
+                            Text("${worker.workerName}", textAlign: TextAlign.center),
+                            Text(worker.districtName, style: TextStyle(fontSize: 10)),
+                            Builder(
+                              builder: (context) {
+                                if (worker.workerSingleApp) {
+                                  return Text("Gaji : Nego", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
+                                }else {
+                                  if (worker.wmoreStayIn) {
+                                    return Text("Gaji : ${rupiah(worker.workerSalary)}/Bulan", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
+                                  }else{
+                                    return Text("Gaji : ${rupiah(worker.categoryPpSalary)}/Hari", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
+                                  }
+                                }
+                              }
+                            ),
+                            Expanded(
+                              child: SizedBox(),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text("${worker.workerAge} ${allTranslations.text('YEARSOLD')}", textAlign: TextAlign.center),
+                                RatingBarIndicator(
+                                  rating: double.parse(worker.workerRating),
+                                  itemSize: 13,
+                                  itemBuilder: (context, index) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  );
+                }).toList(),
               ),
             );
           } else if(snapshot.hasError) {

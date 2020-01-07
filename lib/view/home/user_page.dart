@@ -62,7 +62,7 @@ class UserPage extends StatelessWidget {
         if (snapshot.hasData) {
           return RefreshIndicator(
             key: _refreshKey,
-            onRefresh: () => null,
+            onRefresh: bloc.fetchUser,
             child: ListView(
               children: <Widget>[
                 Container(

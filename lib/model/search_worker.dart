@@ -37,73 +37,73 @@ class SearchWorker {
 }
 
 class Datum {
-    // int idCategory;
     String categoryDesc;
+    String categoryPpSalary;
     int idWorker;
-    // int idProvince;
-    // int idDistrict;
     String workerName;
     String workerRating;
-    // String workerDesc;
     String workerSalary;
-    // String workerSlug;
+    bool wmoreStayIn;
+    bool workerSingleApp;
+    String workerSalaryDaily;
     String provinceName;
     String districtName;
+    bool workerOnlineRegist;
     int workerAge;
     String workerProfile;
-    bool stayIn;
+    String admPrice;
 
     Datum({
-        // this.idCategory,
         this.categoryDesc,
+        this.categoryPpSalary,
         this.idWorker,
-        // this.idProvince,
-        // this.idDistrict,
         this.workerName,
         this.workerRating,
-        // this.workerDesc,
         this.workerSalary,
-        // this.workerSlug,
+        this.wmoreStayIn,
+        this.workerSingleApp,
+        this.workerSalaryDaily,
         this.provinceName,
         this.districtName,
+        this.workerOnlineRegist,
         this.workerAge,
         this.workerProfile,
-        this.stayIn,
+        this.admPrice,
     });
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        // idCategory: json["id_category"] == null ? null : json["id_category"],
         categoryDesc: json["category_desc"] == null ? null : json["category_desc"],
+        categoryPpSalary: json["category_pp_salary"] == null ? null : json["category_pp_salary"],
         idWorker: json["id_worker"] == null ? null : json["id_worker"],
-        // idProvince: json["id_province"] == null ? null : json["id_province"],
-        // idDistrict: json["id_district"] == null ? null : json["id_district"],
         workerName: json["worker_name"] == null ? null : json["worker_name"],
         workerRating: json["worker_rating"] == null ? null : json["worker_rating"],
-        // workerDesc: json["worker_desc"] == null ? null : json["worker_desc"],
         workerSalary: json["worker_salary"] == null ? null : json["worker_salary"],
-        // workerSlug: json["worker_slug"] == null ? null : json["worker_slug"],
+        wmoreStayIn: json["wmore_stay_in"] == null ? null : json["wmore_stay_in"],
+        workerSingleApp: json["worker_single_app"] == null ? null : json["worker_single_app"],
+        workerSalaryDaily: json["worker_salary_daily"] == null ? null : json["worker_salary_daily"],
         provinceName: json["province_name"] == null ? null : json["province_name"],
         districtName: json["district_name"] == null ? null : json["district_name"],
+        workerOnlineRegist: json["worker_online_regist"] == null ? null : json["worker_online_regist"],
         workerAge: json["worker_age"] == null ? null : json["worker_age"],
         workerProfile: json["worker_profile"] == null ? null : json["worker_profile"],
-        stayIn: json["stay_in"] == null ? null : json["stay_in"],
+        admPrice: json["adm_price"] == null ? null : json["adm_price"],
     );
 
     Map<String, dynamic> toJson() => {
-        // // "id_category": idCategory == null ? null : idCategory,
         "category_desc": categoryDesc == null ? null : categoryDesc,
+        "category_pp_salary": categoryPpSalary == null ? null : categoryPpSalary,
         "id_worker": idWorker == null ? null : idWorker,
-        // "id_province": idProvince == null ? null : idProvince,
-        // "id_district": idDistrict == null ? null : idDistrict,
         "worker_name": workerName == null ? null : workerName,
         "worker_rating": workerRating == null ? null : workerRating,
-        // "worker_desc": workerDesc == null ? null : workerDesc,
         "worker_salary": workerSalary == null ? null : workerSalary,
-        // "worker_slug": workerSlug == null ? null : workerSlug,
+        "wmore_stay_in": wmoreStayIn == null ? null : wmoreStayIn,
+        "worker_single_app": workerSingleApp == null ? null : workerSingleApp,
+        "worker_salary_daily": workerSalaryDaily == null ? null : workerSalaryDaily,
         "province_name": provinceName == null ? null : provinceName,
         "district_name": districtName == null ? null : districtName,
+        "worker_online_regist": workerOnlineRegist == null ? null : workerOnlineRegist,
         "worker_age": workerAge == null ? null : workerAge,
         "worker_profile": workerProfile == null ? null : workerProfile,
-        "stay_in": stayIn == null ? null : stayIn,
+        "adm_price": admPrice == null ? null : admPrice,
     };
 }

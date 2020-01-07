@@ -4,6 +4,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:housesolutions/bloc/home_bloc.dart';
 import 'package:housesolutions/model/banner.dart';
 import 'package:housesolutions/model/category.dart';
@@ -11,7 +12,6 @@ import 'package:housesolutions/model/promote.dart';
 import 'package:housesolutions/model/user_model.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
-import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/product/product_list_page.dart';
 import 'package:housesolutions/widget/loading.dart';
 import 'package:responsive_screen/responsive_screen.dart';
@@ -75,6 +75,21 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
+        actions: <Widget>[
+          StreamBuilder<User>(
+            stream: bloc.getUser,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return IconButton(
+                  onPressed: () => navService.navigateTo("/notification"),
+                  icon: Icon(FontAwesomeIcons.bell, color: Theme.of(context).primaryColor),
+                );
+              }else {
+                return SizedBox();
+              }
+            }
+          )
+        ],
         flexibleSpace: Positioned(
           bottom: 0,
           child: StreamBuilder<bool>(
@@ -119,7 +134,8 @@ class HomePage extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: GestureDetector(
-                          onTap: () => bloc.onTapBanner(banner.idCategory),
+                          // onTap: () => bloc.onTapBanner(banner.idCategory),
+                          onTap: () => null,
                           child: bannerSlide(banner.bannerImage)
                         ),
                       );

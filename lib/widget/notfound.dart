@@ -21,7 +21,7 @@ class NotFound extends StatelessWidget {
           ),
         ),
         Center(
-          child: Image.asset(image_asset),
+          child: Image.asset(image_asset, scale: 3),
         )
       ],
     );

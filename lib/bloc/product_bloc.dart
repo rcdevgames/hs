@@ -1,12 +1,19 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:flutter/material.dart';
 import 'package:housesolutions/model/district.dart';
 import 'package:housesolutions/model/province.dart';
 import 'package:housesolutions/model/search_worker.dart';
 import 'package:housesolutions/model/worker.dart';
 import 'package:housesolutions/provider/repository.dart';
+import 'package:housesolutions/util/nav_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProductBloc extends BlocBase {
+  final rat0 = TextEditingController(text: "1");
+  final rat1 = TextEditingController(text: "5");
+  final sal0 = TextEditingController(text: "0");
+  final sal1 = TextEditingController(text: "5000000");
+
   final _list_worker = BehaviorSubject<SearchWorker>();
   final _provinces = BehaviorSubject<List<Province>>();
   final _districts = BehaviorSubject<List<District>>();
@@ -31,6 +38,11 @@ class ProductBloc extends BlocBase {
     _rating.close();
     _salary.close();
     _loading.close();
+
+    rat0.dispose();
+    rat1.dispose();
+    sal0.dispose();
+    sal1.dispose();
   }
 
   //Getter
@@ -44,8 +56,6 @@ class ProductBloc extends BlocBase {
   Stream<List<double>> get getSalary => _salary.stream;
   Stream<String> get getPlace => _place.stream;
   Stream<bool> get isLoading => _loading.stream;
-
-
 
   //Setter
   Function(int) get setProvince => _province.sink.add;
@@ -72,7 +82,6 @@ class ProductBloc extends BlocBase {
         stayIn: stayIn,
         regular: regular
       );
-      
       if (result != null && result.page > 1) {
         setWorkers(SearchWorker(
           page: result.page,
@@ -97,6 +106,42 @@ class ProductBloc extends BlocBase {
       print("Worker DEtail : ${e.toString().replaceAll("Exception: ", "")}");
       _worker.sink.addError(e.toString().replaceAll("Exception: ", ""));
     }
+  }
+
+  Future fetchProvince() async {
+    try {
+      _provinces.sink.add(await repo.fetchProvince());
+    } catch (e) {
+      print("Province : " + e.toString());
+    }
+  }
+  
+  Future fetchDistrict(int idProvince) async {
+    try {
+      _districts.sink.add(await repo.fetchDistrict(idProvince));
+    } catch (e) {
+      print("District : " + e.toString());
+    }
+  }
+
+  Future initFilter() async {
+    await fetchProvince();
+    if (_province.hasValue) {
+      await fetchDistrict(_province.value);
+    }
+
+    if (_rating.hasValue) {
+      rat0.text = _rating.value[0].toInt().toString();
+      rat1.text = _rating.value[1].toInt().toString();
+    }
+    if (_salary.hasValue) {
+      sal0.text = _salary.value[0].toInt().toString();
+      sal1.text = _salary.value[1].toInt().toString();
+    }
+  }
+
+  void confirmOrder(int idCategory) {
+    navService.navigateTo("/confirm-order", [idCategory, _worker.value]);
   }
 
 }

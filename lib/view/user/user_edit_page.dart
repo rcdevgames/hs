@@ -12,6 +12,7 @@ import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/validator.dart';
 import 'package:housesolutions/widget/error_page.dart';
 import 'package:housesolutions/widget/input.dart';
+import 'package:housesolutions/widget/loading.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
 class UpdateUserPage extends StatefulWidget {
@@ -60,161 +61,187 @@ class _UpdateUserPageState extends State<UpdateUserPage> with ValidationMixin {
     final Function wp = Screen(context).wp;
     final Function hp = Screen(context).hp;
 
-    return Scaffold(
-      key: _key,
-      appBar: AppBar(
-        title: Text(allTranslations.text("CHANGE_PROFILE")),
-        brightness: Platform.isIOS ? Brightness.light:Brightness.dark,
-      ),
-      body: StreamBuilder<User>(
-        stream: bloc.getUser,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.hasError) {
-            return Center(
-              child: ErrorPage(
-                message: "Tidak dapat mengubah data.",
-                buttonText: "kembali",
-                onPressed: () => navService.navigatePop(),
-              ),
-            );
-          }
-          loadUser(snapshot.data);
-          return Form(
-            key: _form,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Stack(
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          key: _key,
+          appBar: AppBar(
+            title: Text(allTranslations.text("CHANGE_PROFILE")),
+            brightness: Platform.isIOS ? Brightness.light:Brightness.dark,
+          ),
+          body: StreamBuilder<User>(
+            stream: bloc.getUser,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.hasError) {
+                return Center(
+                  child: ErrorPage(
+                    message: "Tidak dapat mengubah data.",
+                    buttonText: "kembali",
+                    onPressed: () => navService.navigatePop(),
+                  ),
+                );
+              }
+              loadUser(snapshot.data);
+              return Form(
+                key: _form,
+                child: SingleChildScrollView(
+                  child: Column(
                     children: <Widget>[
-                      Container(
-                        height: hp(35),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          image: snapshot.data?.customerImage == null ? null : DecorationImage(image: CachedNetworkImageProvider(snapshot.data?.customerImage), fit: BoxFit.cover)
-                        ),
-                        child: snapshot.data?.customerImage == null ? Center(
-                          child: Text("RP", textAlign: TextAlign.center, style: TextStyle(fontSize: wp(20), fontWeight: FontWeight.bold, color: Colors.white)),
-                        ) : null,
-                      ),
-                      GestureDetector(
-                        onTap: () => bloc.showActionSheet(context),
-                        child: Container(
-                          height: hp(35),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.black26
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      StreamBuilder<File>(
+                        stream: bloc.getImage,
+                        builder: (context, img) {
+                          if (img.hasData) {
+                            return SizedBox(
+                              height: hp(35),
+                              width: double.infinity,
+                              child: Image.file(img.data, fit: BoxFit.cover, alignment: Alignment.topCenter)
+                            );
+                          }
+
+                          return Stack(
                             children: <Widget>[
-                              Icon(Icons.camera_alt, color: Colors.white60, size: wp(20)),
-                              Text("Tap to Change Avatar", style: TextStyle(color: Colors.white60, fontSize: 20, fontWeight: FontWeight.bold))
+                              Container(
+                                height: hp(35),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  image: snapshot.data?.customerImage == null ? null : DecorationImage(image: CachedNetworkImageProvider(snapshot.data?.customerImage), fit: BoxFit.cover)
+                                ),
+                                child: snapshot.data?.customerImage == null ? Center(
+                                  child: Text("RP", textAlign: TextAlign.center, style: TextStyle(fontSize: wp(20), fontWeight: FontWeight.bold, color: Colors.white)),
+                                ) : null,
+                              ),
+                              GestureDetector(
+                                onTap: () => bloc.showActionSheet(context),
+                                child: Container(
+                                  height: hp(35),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black26
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(Icons.camera_alt, color: Colors.white60, size: wp(20)),
+                                      Text("Tap to Change Avatar", style: TextStyle(color: Colors.white60, fontSize: 20, fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                ),
+                              )
                             ],
+                          );
+                        }
+                      ),
+                      InputText(
+                        controller: emailCtrl,
+                        validator: validateEmail,
+                        label: "Email",
+                        enabled: false,
+                        onSaved: null,
+                      ),
+                      InputText(
+                        controller: nameCtrl,
+                        validator: validateRequired,
+                        label: "Nama Lengkap",
+                        enabled: true,
+                        onSaved: bloc.setName,
+                      ),
+                      InputText(
+                        controller: phoneCtrl,
+                        validator: validateNumber,
+                        label: "Nomor HP",
+                        enabled: true,
+                        onSaved: bloc.setPhone
+                      ),
+                      InputText(
+                        controller: addressCtrl,
+                        focusNode: _address,
+                        validator: validateRequired,
+                        label: "Alamat",
+                        textInputAction: TextInputAction.newline,
+                        maxLines: 3,
+                        onSaved: bloc.setAddress,
+                      ),
+                      StreamBuilder<int>(
+                        stream: bloc.getProvince,
+                        builder: (context, snapshot) {
+                          return StreamBuilder<List<Province>>(
+                            stream: bloc.getProvinces,
+                            builder: (context, list) {
+                              return DropdownButtonFormField<int>(
+                                value: snapshot.data,
+                                onChanged: (int i) {
+                                  bloc.setProvince(i);
+                                  bloc.setDistrict(null);
+                                  bloc.fetchDistrict(i);
+                                },
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                                  labelText: "Provinsi"
+                                ),
+                                items: list.hasData ? list.data.map((province) {
+                                  return DropdownMenuItem(
+                                    value: province.idProvince,
+                                    child: Text(province.provinceName),
+                                  );
+                                }).toList():<DropdownMenuItem<int>>[],
+                              );
+                            }
+                          );
+                        }
+                      ),
+                      StreamBuilder<int>(
+                        stream: bloc.getDistrict,
+                        builder: (context, snapshot) {
+                          return StreamBuilder<List<District>>(
+                            stream: bloc.getDistricts,
+                            builder: (context, list) {
+                              return DropdownButtonFormField<int>(
+                                value: snapshot.data,
+                                onChanged: bloc.setDistrict,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+                                  labelText: "Kota/Kabupaten"
+                                ),
+                                items: list.hasData ? list.data.map((district) {
+                                  return DropdownMenuItem(
+                                    value: district.idDistrict,
+                                    child: Text(district.districtName),
+                                  );
+                                }).toList():<DropdownMenuItem<int>>[],
+                              );
+                            }
+                          );
+                        }
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+                        child: RaisedButton(
+                          color: Theme.of(context).primaryColor,
+                          elevation: 0,
+                          onPressed: () => bloc.doChangeProfile(_form),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(child: Text("Simpan", style: TextStyle(color: Colors.white)))
                           ),
                         ),
                       )
                     ],
                   ),
-                  InputText(
-                    controller: emailCtrl,
-                    validator: validateEmail,
-                    label: "Email",
-                    enabled: false,
-                    onSaved: null,
-                  ),
-                  InputText(
-                    controller: nameCtrl,
-                    validator: validateRequired,
-                    label: "Nama Lengkap",
-                    enabled: true,
-                    onSaved: bloc.setName,
-                  ),
-                  InputText(
-                    controller: phoneCtrl,
-                    validator: validateNumber,
-                    label: "Nomor HP",
-                    enabled: true,
-                    onSaved: bloc.setPhone
-                  ),
-                  InputText(
-                    controller: addressCtrl,
-                    focusNode: _address,
-                    validator: validateRequired,
-                    label: "Alamat",
-                    textInputAction: TextInputAction.newline,
-                    maxLines: 3,
-                    onSaved: bloc.setAddress,
-                  ),
-                  StreamBuilder<int>(
-                    stream: bloc.getProvince,
-                    builder: (context, snapshot) {
-                      return StreamBuilder<List<Province>>(
-                        stream: bloc.getProvinces,
-                        builder: (context, list) {
-                          return DropdownButtonFormField<int>(
-                            value: snapshot.data,
-                            onChanged: (int i) {
-                              bloc.setProvince(i);
-                              bloc.fetchDistrict(i);
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                              labelText: "Provinsi"
-                            ),
-                            items: list.hasData ? list.data.map((province) {
-                              return DropdownMenuItem(
-                                value: province.idProvince,
-                                child: Text(province.provinceName),
-                              );
-                            }).toList():<DropdownMenuItem<int>>[],
-                          );
-                        }
-                      );
-                    }
-                  ),
-                  StreamBuilder<int>(
-                    stream: bloc.getDistrict,
-                    builder: (context, snapshot) {
-                      return StreamBuilder<List<District>>(
-                        stream: bloc.getDistricts,
-                        builder: (context, list) {
-                          return DropdownButtonFormField<int>(
-                            value: snapshot.data,
-                            onChanged: bloc.setDistrict,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
-                              labelText: "Kota/Kabupaten"
-                            ),
-                            items: list.hasData ? list.data.map((district) {
-                              return DropdownMenuItem(
-                                value: district.idDistrict,
-                                child: Text(district.districtName),
-                              );
-                            }).toList():<DropdownMenuItem<int>>[],
-                          );
-                        }
-                      );
-                    }
-                  ),
-                  SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-                    child: RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      onPressed: () => bloc.doChangeProfile(_form),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(child: Text("Simpan", style: TextStyle(color: Colors.white)))
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-      ),
+                ),
+              );
+            }
+          ),
+        ),
+        StreamBuilder<bool>(
+          initialData: false,
+          stream: bloc.isLoading,
+          builder: (context, snapshot) {
+            return Loading(snapshot.data);
+          }
+        )
+      ],
     );
   }
 }

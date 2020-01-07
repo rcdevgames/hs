@@ -5,6 +5,9 @@ import 'package:housesolutions/view/auth/register_page.dart';
 import 'package:housesolutions/view/auth/term_and_conditions_page.dart';
 import 'package:housesolutions/view/home/layout.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
+import 'package:housesolutions/view/notifications/notifications_page.dart';
+import 'package:housesolutions/view/order/order_confirmation_page.dart';
+import 'package:housesolutions/view/product/product_filter_page.dart';
 import 'package:housesolutions/view/user/change_lang_page.dart';
 import 'package:housesolutions/view/user/change_password_page.dart';
 import 'package:housesolutions/view/user/contact_us_page.dart';
@@ -33,9 +36,16 @@ class Routes {
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => NewsDetailPage(args));
 
+      // Notification Page
+      case "/notification": return MaterialPageRoute(builder: (_) => NotificationsPage());
+
       // Product Page
+      case "/product-filter": return MaterialPageRoute(builder: (_) => ProductFilterPage());
 
       // Order Page
+      case "/confirm-order": 
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => ConfirmationOrder(args[0], args[1]));
 
       // UserPage
       case "/user-edit": return MaterialPageRoute(builder: (_) => UpdateUserPage());

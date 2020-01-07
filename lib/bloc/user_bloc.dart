@@ -187,6 +187,7 @@ class UserBloc extends BlocBase {
       setLoading(true);
       try {
         var result = await repo.updateProfile(_province.value, _district.value, _name.value, _user.value.customerEmail, _phone.value, _address.value, _image64.value);
+        await fetchUser();
         setLoading(false);
         showAlert(
           context: key.currentContext,

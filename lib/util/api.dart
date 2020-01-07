@@ -19,6 +19,7 @@ class Api {
   Future<Response> post(String _endpoint, {String endpoint, bool auth = false, Map<String, dynamic> body, String ver = "v1"}) async {
     var token = await sessions.load("token");
     String authorization = (auth && token != null ? "/$token":"") + (endpoint != null ? "/$endpoint":"") + "?lang=${allTranslations.currentLanguage}";
+    print("http://api.housesolutionsindonesia.com/api/$ver$_endpoint$authorization");
     return client.post("http://api.housesolutionsindonesia.com/api/$ver$_endpoint$authorization", headers: requestHeaders, body: jsonEncode(body));
   }
   

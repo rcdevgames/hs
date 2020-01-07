@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> with ValidationMixin{
                                 Text(allTranslations.text("SIGN_UP_WORD")),
                                 SizedBox(width: 10),
                                 InkWell(
-                                  onTap: () => Navigator.of(context).pushNamed("/register-customer"),
+                                  onTap: () => Navigator.of(context).pushNamed("/register"),
                                   child: Text(allTranslations.text("SIGN_UP"), style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600)),
                                 )
                               ],

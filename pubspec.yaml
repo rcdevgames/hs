@@ -38,6 +38,7 @@ dependencies:
   path_provider: ^1.5.1
   lazy_load_scrollview: ^1.0.1
   flutrans: ^0.0.4
+  lazy_load_refresh_indicator: ^1.0.0+1
 
 
 dev_dependencies:
