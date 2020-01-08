@@ -83,8 +83,10 @@ flutter:
     - assets/Images/id.png
     - assets/Images/logo.png
     - assets/Images/mandiri.png
+    - assets/Images/midtrans.png
     - assets/Images/not_found.png
     - assets/Images/other.png
+    - assets/Images/tf.png
     - assets/Images/worker.png
     - assets/Images/worker_animation.png
     #assets-generator-end

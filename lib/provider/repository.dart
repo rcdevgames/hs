@@ -72,7 +72,7 @@ class Repository {
   Future<List<Payment>> fetchPayment() => orderProvider.fetchPayment();
   Future<List<OwnWorkers>> fetchMyWorkers() => orderProvider.fetchMyWorkers();
   Future<MyWorker> getMyWorker(int id) => orderProvider.getMyWorker(id);
-  Future<String> requestWorker(int idWorker, int idCategory) => orderProvider.requestWorker(idWorker, idCategory);
+  Future<String> requestWorker(int idWorker, int idCategory, [int total_day = 0]) => orderProvider.requestWorker(idWorker, idCategory, total_day);
   Future<String> uploadApproval(int idTrans, String image64) => orderProvider.uploadApproval(idTrans, image64);
   Future<String> changeWorker(int idTrans, int idWorker, String reason) => orderProvider.changeWorker(idTrans, idWorker, reason);
   Future<List<Transaction>> fetchWorkerOrder() => orderProvider.fetchWorkerOrder();

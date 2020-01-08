@@ -39,10 +39,14 @@ class R {
   static final String assetsImagesLogo = 'assets/Images/logo.png';
   /// ![](http://127.0.0.1:9527/assets/Images/mandiri.png)
   static final String assetsImagesMandiri = 'assets/Images/mandiri.png';
+  /// ![](http://127.0.0.1:9527/assets/Images/midtrans.png)
+  static final String assetsImagesMidtrans = 'assets/Images/midtrans.png';
   /// ![](http://127.0.0.1:9527/assets/Images/not_found.png)
   static final String assetsImagesNotFound = 'assets/Images/not_found.png';
   /// ![](http://127.0.0.1:9527/assets/Images/other.png)
   static final String assetsImagesOther = 'assets/Images/other.png';
+  /// ![](http://127.0.0.1:9527/assets/Images/tf.png)
+  static final String assetsImagesTf = 'assets/Images/tf.png';
   /// ![](http://127.0.0.1:9527/assets/Images/worker.png)
   static final String assetsImagesWorker = 'assets/Images/worker.png';
   /// ![](http://127.0.0.1:9527/assets/Images/worker_animation.png)

@@ -68,10 +68,11 @@ class OrderProvider {
     }
   }
 
-  Future<String> requestWorker(int idWorker, int idCategory) async {
+  Future<String> requestWorker(int idWorker, int idCategory, int total_day) async {
     final response = await api.post("/customer/requestPayment_v2", auth: true, body: {
       "id_worker" : idWorker,
-      "id_category" : idCategory
+      "id_category" : idCategory,
+      "total_day": total_day
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {

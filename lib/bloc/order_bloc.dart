@@ -34,6 +34,8 @@ class OrderBloc extends BlocBase {
   final _path = BehaviorSubject<String>();
   final _image = BehaviorSubject<File>();
   final _paymentMethod = BehaviorSubject<String>();
+  final _radio = BehaviorSubject<String>.seeded("m");
+  final _totalDay = BehaviorSubject<int>();
 
   @override
   void dispose() { 
@@ -50,6 +52,8 @@ class OrderBloc extends BlocBase {
     _path.close();
     _image.close();
     _paymentMethod.close();
+    _radio.close();
+    _totalDay.close();
   }
 
   void disposed() {
@@ -65,6 +69,8 @@ class OrderBloc extends BlocBase {
     _path.sink.add(null);
     _image.sink.add(null);
     _paymentMethod.sink.add(null);
+    _radio.sink.add("m");
+    _totalDay.sink.add(null);
   }
 
   //Getter
@@ -79,6 +85,8 @@ class OrderBloc extends BlocBase {
   Stream<String> get getPath => _path.stream;
   Stream<File> get getImage => _image.stream;
   Stream<String> get getPaymnetMethod => _paymentMethod.stream;
+  Stream<String> get getRadio => _radio.stream;
+  Stream<int> get getTotalDay => _totalDay.stream;
 
   //Setter
   Function(prefix0.Summary) get setSummary => _summary.sink.add;
@@ -93,6 +101,8 @@ class OrderBloc extends BlocBase {
   Function(String) get setPath => _path.sink.add;
   Function(File) get setImage => _image.sink.add;
   Function(String) get setPaymentMethod => _paymentMethod.sink.add;
+  Function(String) get setRadio => _radio.sink.add;
+  Function(int) get setTotalDay => _totalDay.sink.add;
 
   //Function
   Future fetchBank() async {
@@ -179,9 +189,17 @@ class OrderBloc extends BlocBase {
   }
 
   void doOrder(BuildContext context, int idWorker, int idCategory) async {
+    if (_paymentMethod.value != "tf" || _paymentMethod.value != "midtrans") {
+      return showAlert(
+        context: context, 
+        title: "Transaksi tidak dapat diperoses",
+        body: "Pilih Metode Pembayaran anda!"
+      );
+    }
+    navService.navigateTo("/process-payment");
     setLoading(true);
     try {
-      var result = await repo.requestWorker(idWorker, idCategory);
+      var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value);
       await fetchOrders();
       setLoading(false);
       showAlert(

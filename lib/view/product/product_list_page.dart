@@ -11,6 +11,7 @@ import 'package:housesolutions/model/search_worker.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
+import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/product/product_detail_page.dart';
 import 'package:housesolutions/widget/error_page.dart';
 import 'package:housesolutions/widget/loading.dart';
@@ -102,7 +103,14 @@ class _ProductListPageState extends State<ProductListPage> {
                 childAspectRatio: 0.80,
                 children: snapshot.data.data.map((worker) {
                   return InkWell(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailPage(worker.idWorker, widget.category))),
+                    onTap: () async {
+                      var loggedin = await sessions.checkAuth();
+                      if (loggedin) {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailPage(worker.idWorker, widget.category)));
+                      }else {
+                        navService.navigateTo("/login");
+                      }
+                    },
                     child: Card(
                       child: Container(
                         padding: EdgeInsets.all(10.0),
@@ -135,7 +143,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             Builder(
                               builder: (context) {
                                 if (worker.workerSingleApp) {
-                                  return Text("Gaji : Nego", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
+                                  return Text("Gaji : ${rupiah(1500000)}/Bulan", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
                                 }else {
                                   if (worker.wmoreStayIn) {
                                     return Text("Gaji : ${rupiah(worker.workerSalary)}/Bulan", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
@@ -184,23 +192,25 @@ class _ProductListPageState extends State<ProductListPage> {
           } return LoadingBlock();
         }
       ),
-      floatingActionButton: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: FloatingActionButton.extended(
-            icon: Icon(FontAwesomeIcons.filter, color: Colors.white, size: 16),
-            label: Text("Filter", style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              var data = await navService.navigateTo("/product-filter");
-              if (data != null) {
-                bloc.setWorkers(null);
-                bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular);
-              }
-            },
-          ),
-        ),
+      floatingActionButton: StreamBuilder<SearchWorker>(
+        stream: bloc.getWorkers,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return FloatingActionButton.extended(
+              icon: Icon(FontAwesomeIcons.filter, color: Colors.white, size: 16),
+              label: Text("Filter", style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                var data = await navService.navigateTo("/product-filter");
+                if (data != null) {
+                  bloc.setWorkers(null);
+                  bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular);
+                }
+              },
+            );
+          } return SizedBox();
+        }
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

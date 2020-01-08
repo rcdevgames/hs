@@ -28,7 +28,7 @@ class Worker {
     String categoryDesc;
     String categoryPpSalary;
     WorkerMore workerMore;
-    List<dynamic> workerCertificate;
+    List<WorkerCertificate> workerCertificate;
     List<String> workerPlacement;
     List<String> workerSkills;
     String admPrice;
@@ -79,7 +79,7 @@ class Worker {
         categoryDesc: json["category_desc"] == null ? null : json["category_desc"],
         categoryPpSalary: json["category_pp_salary"] == null ? null : json["category_pp_salary"],
         workerMore: json["worker_more"] == null ? null : WorkerMore.fromJson(json["worker_more"]),
-        workerCertificate: json["worker_certificate"] == null ? null : List<dynamic>.from(json["worker_certificate"].map((x) => x)),
+        workerCertificate: json["worker_certificate"] == null ? null : List<WorkerCertificate>.from(json["worker_certificate"].map((x) => WorkerCertificate.fromJson(x))),
         workerPlacement: json["worker_placement"] == null ? null : List<String>.from(json["worker_placement"].map((x) => x)),
         workerSkills: json["worker_skills"] == null ? null : List<String>.from(json["worker_skills"].map((x) => x)),
         admPrice: json["adm_price"] == null ? null : json["adm_price"],
@@ -105,10 +105,30 @@ class Worker {
         "category_desc": categoryDesc == null ? null : categoryDesc,
         "category_pp_salary": categoryPpSalary == null ? null : categoryPpSalary,
         "worker_more": workerMore == null ? null : workerMore.toJson(),
-        "worker_certificate": workerCertificate == null ? null : List<dynamic>.from(workerCertificate.map((x) => x)),
+        "worker_certificate": workerCertificate == null ? null : List<dynamic>.from(workerCertificate.map((x) => x.toJson())),
         "worker_placement": workerPlacement == null ? null : List<dynamic>.from(workerPlacement.map((x) => x)),
         "worker_skills": workerSkills == null ? null : List<dynamic>.from(workerSkills.map((x) => x)),
         "adm_price": admPrice == null ? null : admPrice,
+    };
+}
+
+class WorkerCertificate {
+    String certificateTitle;
+    String certificateImage;
+
+    WorkerCertificate({
+        this.certificateTitle,
+        this.certificateImage,
+    });
+
+    factory WorkerCertificate.fromJson(Map<String, dynamic> json) => WorkerCertificate(
+        certificateTitle: json["certificate_title"] == null ? null : json["certificate_title"],
+        certificateImage: json["certificate_image"] == null ? null : json["certificate_image"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "certificate_title": certificateTitle == null ? null : certificateTitle,
+        "certificate_image": certificateImage == null ? null : certificateImage,
     };
 }
 

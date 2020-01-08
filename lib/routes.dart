@@ -6,6 +6,7 @@ import 'package:housesolutions/view/auth/term_and_conditions_page.dart';
 import 'package:housesolutions/view/home/layout.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
 import 'package:housesolutions/view/notifications/notifications_page.dart';
+import 'package:housesolutions/view/order/loading_payment_page.dart';
 import 'package:housesolutions/view/order/order_confirmation_page.dart';
 import 'package:housesolutions/view/product/product_filter_page.dart';
 import 'package:housesolutions/view/user/change_lang_page.dart';
@@ -46,6 +47,7 @@ class Routes {
       case "/confirm-order": 
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => ConfirmationOrder(args[0], args[1]));
+      case "/process-payment": return MaterialPageRoute(builder: (_) => LoadingPayment());
 
       // UserPage
       case "/user-edit": return MaterialPageRoute(builder: (_) => UpdateUserPage());

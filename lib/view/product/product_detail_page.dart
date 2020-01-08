@@ -158,7 +158,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 Text(snapshot.data.districtName, style: TextStyle(color: Colors.white)),
                                 SizedBox(height: 5),
                                 Text("Gaji : ", style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white)),
-                                Text(snapshot.data.workerSalary, style: TextStyle(color: Colors.white)),
+                                Builder(
+                                  builder: (context) {
+                                    if (snapshot.data.workerOnlineRegist) {
+                                      return Text("${rupiah(1500000)}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+                                    }else {
+                                      if (snapshot.data.workerMore.wmoreStayIn) {
+                                        return Text("${snapshot.data.workerSalary}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+                                      }else{
+                                        return Text("${rupiah(snapshot.data.categoryPpSalary)}/Hari\n${snapshot.data.workerSalary}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
+                                      }
+                                    }
+                                  }
+                                ),
+                                // Text(snapshot.data.workerSalary, style: TextStyle(color: Colors.white)),
                                 SizedBox(height: 5),
                               ],
                             ),
@@ -192,8 +205,27 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       profileData(context, key: "Anak", value: "${snapshot.data.workerMore.wmoreChildren??0} Anak"),
                       profileData(context, key: "Tinggi Badan", value: snapshot.data.workerHeight),
                       profileData(context, key: "Berat Badan", value: snapshot.data.workerWeight),
-                      profileData(context, key: "Adminstrasi", value: rupiah(0, separator: ","), valueBold: true),
-                      profileData(context, key: "Gaji", value: snapshot.data.workerSalary, valueBold: true),
+                      Builder(
+                        builder: (context) {
+                          if (!snapshot.data.workerOnlineRegist && !snapshot.data.workerMore.wmoreStayIn) {
+                            return profileData(context, key: "Adminstrasi", value: "${rupiah(snapshot.data.admPrice)}/Hari | ${rupiah(1000000)}", valueBold: true);  
+                          }
+                          return profileData(context, key: "Adminstrasi", value: rupiah(snapshot.data.admPrice), valueBold: true);
+                        }
+                      ),
+                      Builder(
+                        builder: (context) {
+                          if (snapshot.data.workerOnlineRegist) {
+                            return profileData(context, key: "Gaji", value: "${rupiah(1500000)}/Bulan", valueBold: true);
+                          }else {
+                            if (snapshot.data.workerMore.wmoreStayIn) {
+                              return profileData(context, key: "Gaji", value: "${snapshot.data.workerSalary}/Bulan", valueBold: true);
+                            }else{
+                              return profileData(context, key: "Gaji", value: "${rupiah(snapshot.data.categoryPpSalary)}/Hari | ${snapshot.data.workerSalary}/Bulan", valueBold: true);
+                            }
+                          }
+                        }
+                      ),
                       profileData(context, key: "Kota/Kabupaten", value: snapshot.data.districtName),
                       profileData(context, key: "Provinsi", value: snapshot.data.provinceName),
                       profileData(context, key: "Kerja Luar Negeri", value: snapshot.data.workerMore.wmoreAbroadEx != null && snapshot.data.workerMore.wmoreAbroadEx ? "Berpengalaman":"Tidak Berpengalaman"),
@@ -314,9 +346,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           } return LoadingBlock();
         }
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("Saya Ambil Pekerja ini.", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-        onPressed: () => bloc.confirmOrder(widget.category.idCategory),
+      floatingActionButton: StreamBuilder<Worker>(
+        stream: bloc.getWorker,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return FloatingActionButton.extended(
+              label: Text("Saya Ambil Pekerja ini.", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              onPressed: () => bloc.confirmOrder(widget.category.idCategory),
+            );
+          } return SizedBox();
+        }
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
