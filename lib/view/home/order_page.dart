@@ -36,6 +36,13 @@ class OrderPage extends StatelessWidget {
     "expired": Colors.red,
   };
 
+  String zeroPad(int val) {
+    if (val < 10) {
+      return "0$val";
+    }
+    return val.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Function wp = Screen(context).wp;
@@ -167,7 +174,7 @@ class OrderPage extends StatelessWidget {
                       itemBuilder: (BuildContext context, int i) {
                         return ListTile(
                           title: Text("#${snapshot.data[i].transId.toString().toUpperCase()}"),
-                          subtitle: Text("${allTranslations.text('UPDATED')} : ${tanggal(snapshot.data[i].transUpdated)} ${snapshot.data[i].transUpdated.hour}:${snapshot.data[i].transUpdated.minute}"),
+                          subtitle: Text("${allTranslations.text('UPDATED')} : ${tanggal(snapshot.data[i].transUpdated)} ${zeroPad(snapshot.data[i].transUpdated.hour)}:${zeroPad(snapshot.data[i].transUpdated.minute)}"),
                           trailing: SizedBox(
                             width: wp(20),
                             child: Column(
@@ -179,7 +186,7 @@ class OrderPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          onTap: () => navService.navigateTo("/deposit-payment", snapshot.data[i]),
+                          onTap: () => navService.navigateTo("/detail-order", snapshot.data[i]),
                         );
                       },
                     ),
@@ -231,7 +238,7 @@ class OrderPage extends StatelessWidget {
                       separatorBuilder: (ctx, i) => Divider(),
                       itemBuilder: (BuildContext context, int i) {
                         return ListTile(
-                          onTap: () => navService.navigateTo("/detail-own-worker", snapshot.data[i].idCworker),
+                          onTap: () => navService.navigateTo("/myworker-detail", snapshot.data[i]),
                           leading: snapshot.data[i].workerProfile != null ? CircleAvatar(
                             backgroundImage: new CachedNetworkImageProvider(snapshot.data[i].workerProfile),
                             backgroundColor: Colors.transparent,

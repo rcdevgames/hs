@@ -22,6 +22,12 @@ class PaymentDetail {
     String transId;
     String transAttempt;
     bool transRejectAdmin;
+    bool transCreatedAdmin;
+    dynamic transMidCallback;
+    bool transHide;
+    String transTotalDay;
+    String transAdmPrice;
+    String transPaymentMethod;
     String packetPrice;
     String categoryDesc;
     String invoice;
@@ -41,6 +47,12 @@ class PaymentDetail {
         this.transId,
         this.transAttempt,
         this.transRejectAdmin,
+        this.transCreatedAdmin,
+        this.transMidCallback,
+        this.transHide,
+        this.transTotalDay,
+        this.transAdmPrice,
+        this.transPaymentMethod,
         this.packetPrice,
         this.categoryDesc,
         this.invoice,
@@ -61,6 +73,12 @@ class PaymentDetail {
         transId: json["trans_id"] == null ? null : json["trans_id"],
         transAttempt: json["trans_attempt"] == null ? null : json["trans_attempt"],
         transRejectAdmin: json["trans_reject_admin"] == null ? null : json["trans_reject_admin"],
+        transCreatedAdmin: json["trans_created_admin"] == null ? null : json["trans_created_admin"],
+        transMidCallback: json["trans_mid_callback"],
+        transHide: json["trans_hide"] == null ? null : json["trans_hide"],
+        transTotalDay: json["trans_total_day"] == null ? null : json["trans_total_day"],
+        transAdmPrice: json["trans_adm_price"] == null ? null : json["trans_adm_price"],
+        transPaymentMethod: json["trans_payment_method"] == null ? null : json["trans_payment_method"],
         packetPrice: json["packet_price"] == null ? null : json["packet_price"],
         categoryDesc: json["category_desc"] == null ? null : json["category_desc"],
         invoice: json["invoice"] == null ? null : json["invoice"],
@@ -81,6 +99,12 @@ class PaymentDetail {
         "trans_id": transId == null ? null : transId,
         "trans_attempt": transAttempt == null ? null : transAttempt,
         "trans_reject_admin": transRejectAdmin == null ? null : transRejectAdmin,
+        "trans_created_admin": transCreatedAdmin == null ? null : transCreatedAdmin,
+        "trans_mid_callback": transMidCallback,
+        "trans_hide": transHide == null ? null : transHide,
+        "trans_total_day": transTotalDay == null ? null : transTotalDay,
+        "trans_adm_price": transAdmPrice == null ? null : transAdmPrice,
+        "trans_payment_method": transPaymentMethod == null ? null : transPaymentMethod,
         "packet_price": packetPrice == null ? null : packetPrice,
         "category_desc": categoryDesc == null ? null : categoryDesc,
         "invoice": invoice == null ? null : invoice,
@@ -106,11 +130,14 @@ class Detail {
     String workerSalary;
     String workerDesc;
     DateTime workerBirthdate;
+    String workerSalaryDaily;
+    bool workerOnlineRegist;
     String districtName;
     String provinceName;
     int workerAge;
     String workerProfile;
     String workerSalaryFormatted;
+    bool wmoreStayIn;
 
     Detail({
         this.idTworker,
@@ -130,11 +157,14 @@ class Detail {
         this.workerSalary,
         this.workerDesc,
         this.workerBirthdate,
+        this.workerSalaryDaily,
+        this.workerOnlineRegist,
         this.districtName,
         this.provinceName,
         this.workerAge,
         this.workerProfile,
         this.workerSalaryFormatted,
+        this.wmoreStayIn,
     });
 
     factory Detail.fromJson(Map<String, dynamic> json) => Detail(
@@ -155,11 +185,14 @@ class Detail {
         workerSalary: json["worker_salary"] == null ? null : json["worker_salary"],
         workerDesc: json["worker_desc"] == null ? null : json["worker_desc"],
         workerBirthdate: json["worker_birthdate"] == null ? null : DateTime.parse(json["worker_birthdate"]),
+        workerSalaryDaily: json["worker_salary_daily"] == null ? null : json["worker_salary_daily"],
+        workerOnlineRegist: json["worker_online_regist"] == null ? null : json["worker_online_regist"],
         districtName: json["district_name"] == null ? null : json["district_name"],
         provinceName: json["province_name"] == null ? null : json["province_name"],
         workerAge: json["worker_age"] == null ? null : json["worker_age"],
         workerProfile: json["worker_profile"] == null ? null : json["worker_profile"],
         workerSalaryFormatted: json["worker_salary_formatted"] == null ? null : json["worker_salary_formatted"],
+        wmoreStayIn: json["wmore_stay_in"] == null ? null : json["wmore_stay_in"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -180,10 +213,13 @@ class Detail {
         "worker_salary": workerSalary == null ? null : workerSalary,
         "worker_desc": workerDesc == null ? null : workerDesc,
         "worker_birthdate": workerBirthdate == null ? null : "${workerBirthdate.year.toString().padLeft(4, '0')}-${workerBirthdate.month.toString().padLeft(2, '0')}-${workerBirthdate.day.toString().padLeft(2, '0')}",
+        "worker_salary_daily": workerSalaryDaily == null ? null : workerSalaryDaily,
+        "worker_online_regist": workerOnlineRegist == null ? null : workerOnlineRegist,
         "district_name": districtName == null ? null : districtName,
         "province_name": provinceName == null ? null : provinceName,
         "worker_age": workerAge == null ? null : workerAge,
         "worker_profile": workerProfile == null ? null : workerProfile,
         "worker_salary_formatted": workerSalaryFormatted == null ? null : workerSalaryFormatted,
+        "wmore_stay_in": wmoreStayIn == null ? null : wmoreStayIn,
     };
 }

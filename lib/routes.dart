@@ -6,8 +6,12 @@ import 'package:housesolutions/view/auth/term_and_conditions_page.dart';
 import 'package:housesolutions/view/home/layout.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
 import 'package:housesolutions/view/notifications/notifications_page.dart';
+import 'package:housesolutions/view/order/invoice_page.dart';
 import 'package:housesolutions/view/order/loading_payment_page.dart';
 import 'package:housesolutions/view/order/order_confirmation_page.dart';
+import 'package:housesolutions/view/order/order_detail_page.dart';
+import 'package:housesolutions/view/order/payment_midtrans_page.dart';
+import 'package:housesolutions/view/order/payment_transfer_page.dart';
 import 'package:housesolutions/view/product/product_filter_page.dart';
 import 'package:housesolutions/view/user/change_lang_page.dart';
 import 'package:housesolutions/view/user/change_password_page.dart';
@@ -17,6 +21,8 @@ import 'package:housesolutions/view/user/user_edit_page.dart';
 import 'package:housesolutions/view/user/user_settings_page.dart';
 import 'package:housesolutions/view/welcome/select_lang_page.dart';
 import 'package:housesolutions/view/welcome/welcome_page.dart';
+import 'package:housesolutions/view/worker/detail_own_worker_page.dart';
+import 'package:housesolutions/view/worker/request_change_worker_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -48,6 +54,25 @@ class Routes {
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => ConfirmationOrder(args[0], args[1]));
       case "/process-payment": return MaterialPageRoute(builder: (_) => LoadingPayment());
+      case "/detail-order": 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => OrderDetailPage(args));
+      case "/dopay-manual": 
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => PaymentManualPage(args[0], args[1]));
+      case "/dopay-midtrans": 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => PaymentMidtransPage());
+      case "/invoice": 
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => InvoicePDF(args[0], args[1]));
+
+      // Worker
+      case "/myworker-detail": 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => DetailOwnWorkerPage(args));
+      case "/change-worker": return MaterialPageRoute(builder: (_) => RequestChangeWorkerPage());
+
 
       // UserPage
       case "/user-edit": return MaterialPageRoute(builder: (_) => UpdateUserPage());

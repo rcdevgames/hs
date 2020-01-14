@@ -19,6 +19,8 @@ class _SplashScreenState extends State<SplashScreen> {
   init() async {
     // var userData = await sessions.checkAuth();
     var userData = await sessions.load("lang");
+    if (userData == null) sessions.save("lang", "id");
+
     print("Lang : $userData");
     await Future.delayed(const Duration(milliseconds: 3000));
 
@@ -28,7 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
       return false;
     }
 
-    navService.navigateReplaceTo("/init-lang");
+    navService.navigateReplaceTo("/welcome");
+    // navService.navigateReplaceTo("/init-lang");
   }
 
   @override

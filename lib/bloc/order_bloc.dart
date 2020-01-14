@@ -189,46 +189,47 @@ class OrderBloc extends BlocBase {
   }
 
   void doOrder(BuildContext context, int idWorker, int idCategory) async {
-    if (_paymentMethod.value != "tf" || _paymentMethod.value != "midtrans") {
-      return showAlert(
+    if (_paymentMethod.value == "tf" || _paymentMethod.value == "midtrans") {
+      navService.navigateTo("/process-payment");
+      setLoading(true);
+      try {
+        var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value, _paymentMethod.value);
+        await fetchOrders();
+        setLoading(false);
+        showAlert(
+          context: context,
+          title: "Order Success",
+          body: result,
+          barrierDismissible: false,
+          actions: [
+            AlertAction(
+              text: "Confirm",
+              onPressed: () {
+                var bloc = BlocProvider.getBloc<LayoutBloc>();
+                bloc.setIndex(1);
+                navService.navigatePopUntil("/main");
+              }
+            )
+          ]
+        );
+      } catch (e) {
+        setLoading(false);
+        print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
+        if (e.toString().contains("Unauthorized")) {
+          sessions.clear();
+          return navService.navigateReplaceTo("/login", "unauthorized");
+        }
+        showAlert(
+          context: context,
+          title: "Order Error",
+          body: e.toString().replaceAll("Exception: ", "")
+        );
+      }
+    }else {
+      showAlert(
         context: context, 
         title: "Transaksi tidak dapat diperoses",
         body: "Pilih Metode Pembayaran anda!"
-      );
-    }
-    navService.navigateTo("/process-payment");
-    setLoading(true);
-    try {
-      var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value);
-      await fetchOrders();
-      setLoading(false);
-      showAlert(
-        context: context,
-        title: "Order Success",
-        body: result,
-        barrierDismissible: false,
-        actions: [
-          AlertAction(
-            text: "Confirm",
-            onPressed: () {
-              var bloc = BlocProvider.getBloc<LayoutBloc>();
-              bloc.setIndex(1);
-              navService.navigatePopUntil("/main");
-            }
-          )
-        ]
-      );
-    } catch (e) {
-      setLoading(false);
-      print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
-      if (e.toString().contains("Unauthorized")) {
-        sessions.clear();
-        return navService.navigateReplaceTo("/login", "unauthorized");
-      }
-      showAlert(
-        context: context,
-        title: "Order Error",
-        body: e.toString().replaceAll("Exception: ", "")
       );
     }
   }
@@ -238,7 +239,7 @@ class OrderBloc extends BlocBase {
       key.currentState.save();
       setLoading(true);
       try {
-        var result = await repo.changeWorker(int.tryParse(_worker.value.idTrans), _worker.value.idCworker, _reason.value);
+        var result = await repo.changeWorker(int.tryParse(_worker.value.idTrans), _worker.value.idWorker, _reason.value);
         setLoading(false);
         showAlert(
           context: key.currentContext,
@@ -281,7 +282,9 @@ class OrderBloc extends BlocBase {
       try {
         var result = await repo.uploadApproval(idTrans, base64Image);
         await fetchPayment(idTrans);
+        navService.navigatePop();
         setLoading(false);
+        print(result);
         showAlert(
           context: context,
           title: "Upload Image Success",

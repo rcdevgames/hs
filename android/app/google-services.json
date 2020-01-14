@@ -8,12 +8,73 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:660444231620:android:354c46b001ac4a03",
+        "android_client_info": {
+          "package_name": "com.malau.hsworker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660444231620-750jmajd4p98mk47s036v74sv8q7f1rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malau.hsworker",
+            "certificate_hash": "f2d9877bffa7e20d1b1aff443de2439b36910fe1"
+          }
+        },
+        {
+          "client_id": "660444231620-ami4ueih9rpues5g0l7nbi1qs49812rp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKp_b7i244ravdzSVjg2zNWNYCALspDSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660444231620-ami4ueih9rpues5g0l7nbi1qs49812rp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "660444231620-vjt27ucq2jt02lmn1rqi2bfgl3trmu21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "id.app.housesolutions",
+                "app_store_id": "1474737188"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:660444231620:android:e8eebebec024d3dd",
         "android_client_info": {
           "package_name": "id.app.housesolutions"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "660444231620-4idc0gugthl7p2ukqo6ih6d5jekqbgpd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.app.housesolutions",
+            "certificate_hash": "96227c1929da297246fe8c4369d653b2983737ca"
+          }
+        },
+        {
+          "client_id": "660444231620-1jo12opb66ml1gbs6pimpm0cdps3hr7k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.app.housesolutions",
+            "certificate_hash": "9c38093f74111c130bc03003b61d6c49bd6ef3d4"
+          }
+        },
         {
           "client_id": "660444231620-rg09co8im6lg5gfrulm2ekhcslt1nrpe.apps.googleusercontent.com",
           "client_type": 1,

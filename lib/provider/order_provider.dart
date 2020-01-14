@@ -68,11 +68,18 @@ class OrderProvider {
     }
   }
 
-  Future<String> requestWorker(int idWorker, int idCategory, int total_day) async {
+  Future<String> requestWorker(int idWorker, int idCategory, int total_day, String payment_method) async {
+    print({
+      "id_worker" : idWorker,
+      "id_category" : idCategory,
+      "total_day": total_day,
+      "trans_payment_method": payment_method
+    });
     final response = await api.post("/customer/requestPayment_v2", auth: true, body: {
       "id_worker" : idWorker,
       "id_category" : idCategory,
-      "total_day": total_day
+      "total_day": total_day,
+      "trans_payment_method": payment_method
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -87,9 +94,10 @@ class OrderProvider {
   Future<String> uploadApproval(int idTrans, String image64) async {
     final response = await api.post("/customer/uploadApprovement_v2", auth: true, body: {
       "id_trans" : idTrans,
-      "image" : image64
+      "image" : "data:image/jpeg;base64,$image64"
     });
 
+    print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       return api.getContent(response.body);
     } else if(response.statusCode == 401) {
@@ -100,12 +108,19 @@ class OrderProvider {
   }
 
   Future<String> changeWorker(int idTrans, int idWorker, String reason) async {
+    print({
+      "id_trans" : idTrans,
+      "id_worker" : idWorker,
+      "reject_reason": reason
+    });
     final response = await api.post("/customer/requestReject_v2", auth: true, body: {
       "id_trans" : idTrans,
       "id_worker" : idWorker,
       "reject_reason": reason
     });
 
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       return api.getContent(response.body);
     } else if(response.statusCode == 401) {
