@@ -7,6 +7,7 @@ import 'package:housesolutions/bloc/user_bloc.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
+import 'package:housesolutions/view/chat/chat_page.dart';
 import 'package:housesolutions/view/home/home_page.dart';
 import 'package:housesolutions/view/home/order_page.dart';
 import 'package:housesolutions/view/home/user_page.dart';
@@ -27,6 +28,7 @@ class _LayoutPageState extends State<LayoutPage> {
 
   final pages = [
     new HomePage(),
+    new ChatPage(),
     new OrderPage(),
     new UserPage()
   ];
@@ -75,10 +77,15 @@ class _LayoutPageState extends State<LayoutPage> {
           return BottomNavigationBar(
             onTap: bloc.setIndex,
             currentIndex: snapshot.data,
+            type: BottomNavigationBarType.fixed,
             items: [
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.home),
                 title: Text(allTranslations.text("HOME"))
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.commentDots),
+                title: Text("Chat")
               ),
               BottomNavigationBarItem(
                 icon: Icon(FontAwesomeIcons.solidListAlt),

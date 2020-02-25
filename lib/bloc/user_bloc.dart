@@ -5,6 +5,7 @@ import 'package:cryptoutils/cryptoutils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
+import 'package:housesolutions/bloc/order_bloc.dart';
 import 'package:housesolutions/model/district.dart';
 import 'package:housesolutions/model/province.dart';
 import 'package:housesolutions/model/user_model.dart';
@@ -12,6 +13,7 @@ import 'package:housesolutions/provider/repository.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
+import 'package:housesolutions/view/home/layout.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -257,6 +259,14 @@ class UserBloc extends BlocBase {
         _images.sink.add(img);
       }
     }
+  }
+
+  void detailSalary() {
+    final layout = BlocProvider.getBloc<LayoutBloc>();
+    final order = BlocProvider.getBloc<OrderBloc>();
+
+    layout.setIndex(1);
+    order.setTAB(1);
   }
 
 }

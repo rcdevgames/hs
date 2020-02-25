@@ -90,7 +90,7 @@ class _ProductListPageState extends State<ProductListPage> {
               //   image_asset: "assets/Images/empty_worker.png"
               // );
               return Center(
-                child: Image.asset(R.assetsImagesNotFound, scale: 3.5),
+                child: Image.asset(R.assetsImagesDataTidakTersedia, scale: 2.5),
               );
             }
 

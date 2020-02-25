@@ -1,7 +1,7 @@
 name: housesolutions
 description: House Solutions Majikan.
 
-version: 1.6.1+53
+version: 1.6.1+54
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -39,6 +39,7 @@ dependencies:
   lazy_load_scrollview: ^1.0.1
   flutrans: ^0.0.4
   lazy_load_refresh_indicator: ^1.0.0+1
+  clippy_flutter: ^1.1.0
 
 
 dev_dependencies:
@@ -71,22 +72,64 @@ flutter:
     - assets/Images/3.png
     - assets/Images/4.png
     - assets/Images/5.png
+    - assets/Images/background.png
+    - assets/Images/banner_1.png
+    - assets/Images/banner_2.png
+    - assets/Images/banner_3.png
+    - assets/Images/banner_online.png
+    - assets/Images/banner_pp.png
+    - assets/Images/banner_regular.png
     - assets/Images/bca.png
+    - assets/Images/belum_memiliki_pekerja.png
+    - assets/Images/belum_memiliki_transaksi.png
     - assets/Images/bri.png
+    - assets/Images/cancel.png
+    - assets/Images/chat.png
+    - assets/Images/checklist.png
     - assets/Images/customer.png
+    - assets/Images/data_tidak_tersedia.png
     - assets/Images/empty_transaction.png
     - assets/Images/empty_worker.png
     - assets/Images/en.png
     - assets/Images/eror.png
+    - assets/Images/family.png
+    - assets/Images/foto_diri.png
     - assets/Images/garansi.png
+    - assets/Images/header.png
+    - assets/Images/healty.png
+    - assets/Images/home_1.jpg
+    - assets/Images/home_2.jpg
     - assets/Images/icon.png
+    - assets/Images/icon_1.png
+    - assets/Images/icon_aktif.png
+    - assets/Images/icon_foto.png
+    - assets/Images/icon_izin_kel.png
+    - assets/Images/icon_kk.png
+    - assets/Images/icon_ktp.png
+    - assets/Images/icon_rtrw.png
+    - assets/Images/icon_siapkandoc.png
+    - assets/Images/icon_skck.png
+    - assets/Images/icon_vical.png
     - assets/Images/id.png
+    - assets/Images/job_inform.png
+    - assets/Images/kitchen.png
     - assets/Images/logo.png
+    - assets/Images/logo_fix.png
+    - assets/Images/logo_white.png
     - assets/Images/mandiri.png
     - assets/Images/midtrans.png
+    - assets/Images/news.png
     - assets/Images/not_found.png
+    - assets/Images/notification.png
+    - assets/Images/offline.png
+    - assets/Images/online.png
     - assets/Images/other.png
+    - assets/Images/pinger_print.png
+    - assets/Images/pp.png
+    - assets/Images/regular.png
+    - assets/Images/terjadi_kesalahan.png
     - assets/Images/tf.png
+    - assets/Images/underconstruction_chat.png
     - assets/Images/worker.png
     - assets/Images/worker_animation.png
     #assets-generator-end

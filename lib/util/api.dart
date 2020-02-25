@@ -10,9 +10,10 @@ class Api {
     'Accept': 'application/json'
   };
 
-  Future<Response> get(String _endpoint, {String endpoint, bool auth = false}) async {
+  Future<Response> get(String _endpoint, {String endpoint, bool auth = false, String endpoints}) async {
     var token = await sessions.load("token");
-    String authorization = (auth && token != null ? "/$token":"") + (endpoint != null ? "/$endpoint":"") + "?lang=${allTranslations.currentLanguage}";
+    String authorization = (auth && token != null ? "/$token":"") + (endpoint != null ? "/$endpoint":"") + (endpoints != null ? "/$endpoints":"") + "?lang=${allTranslations.currentLanguage}";
+    print("http://api.housesolutionsindonesia.com/api/v1$_endpoint$authorization");
     return client.get("http://api.housesolutionsindonesia.com/api/v1$_endpoint$authorization", headers: requestHeaders);
   }
   

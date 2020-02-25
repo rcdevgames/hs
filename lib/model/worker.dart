@@ -20,6 +20,8 @@ class Worker {
     String workerHeight;
     bool workerOnlineRegist;
     String workerSalaryDaily;
+    String workerLong;
+    String workerLat;
     String provinceName;
     String districtName;
     int workerAge;
@@ -45,6 +47,8 @@ class Worker {
         this.workerHeight,
         this.workerOnlineRegist,
         this.workerSalaryDaily,
+        this.workerLong,
+        this.workerLat,
         this.provinceName,
         this.districtName,
         this.workerAge,
@@ -71,6 +75,8 @@ class Worker {
         workerHeight: json["worker_height"] == null ? null : json["worker_height"],
         workerOnlineRegist: json["worker_online_regist"] == null ? null : json["worker_online_regist"],
         workerSalaryDaily: json["worker_salary_daily"] == null ? null : json["worker_salary_daily"],
+        workerLong: json["worker_long"] == null ? null : json["worker_long"],
+        workerLat: json["worker_lat"] == null ? null : json["worker_lat"],
         provinceName: json["province_name"] == null ? null : json["province_name"],
         districtName: json["district_name"] == null ? null : json["district_name"],
         workerAge: json["worker_age"] == null ? null : json["worker_age"],
@@ -97,6 +103,8 @@ class Worker {
         "worker_height": workerHeight == null ? null : workerHeight,
         "worker_online_regist": workerOnlineRegist == null ? null : workerOnlineRegist,
         "worker_salary_daily": workerSalaryDaily == null ? null : workerSalaryDaily,
+        "worker_long": workerLong == null ? null : workerLong,
+        "worker_lat": workerLat == null ? null : workerLat,
         "province_name": provinceName == null ? null : provinceName,
         "district_name": districtName == null ? null : districtName,
         "worker_age": workerAge == null ? null : workerAge,

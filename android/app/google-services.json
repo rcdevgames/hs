@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:660444231620:android:354c46b001ac4a03",
         "android_client_info": {
-          "package_name": "com.malau.hsworker"
+          "package_name": "com.malau.housesolutions"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "660444231620-750jmajd4p98mk47s036v74sv8q7f1rc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.malau.hsworker",
+            "package_name": "com.malau.housesolutions",
             "certificate_hash": "f2d9877bffa7e20d1b1aff443de2439b36910fe1"
           }
         },

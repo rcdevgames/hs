@@ -100,8 +100,8 @@ class ContactUsPage extends StatelessWidget {
               ),
               SizedBox(height: 30),
               address("House Solutions Training Center Jakarta", "Jl. Raya Pd. Gede No.12A, RT.3/RW.1, Dukuh, Kec. Kramat jati, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13550", "https://www.google.com/maps?ll=-6.288474,106.875896&z=16&t=m&hl=en&gl=ID&mapclient=embed&cid=11966702657786029657", "02122320588", "08111777395"),
-              SizedBox(height: 10),
-              address("House Solutions Training Center Bekasi", "Jl. Ir. H. Juanda No.110c, Duren Jaya, Kec. Bekasi Timur., Kota Bks, Jawa Barat 17113", "https://goo.gl/maps/7GE8mfoPCZ5zTas98", "02122320588", "081617775009")
+              // SizedBox(height: 10),
+              // address("House Solutions Training Center Bekasi", "Jl. Ir. H. Juanda No.110c, Duren Jaya, Kec. Bekasi Timur., Kota Bks, Jawa Barat 17113", "https://goo.gl/maps/7GE8mfoPCZ5zTas98", "02122320588", "081617775009")
             ],
           ),
         ),

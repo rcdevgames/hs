@@ -160,7 +160,7 @@ class OrderPage extends StatelessWidget {
                           ),
                         ),
                         Center(
-                          child: Image.asset(R.assetsImagesEmptyTransaction, scale: 3.5),
+                          child: Image.asset(R.assetsImagesBelumMemilikiTransaksi, scale: 2.0),
                         )
                       ],
                     );
@@ -225,7 +225,7 @@ class OrderPage extends StatelessWidget {
                           ),
                         ),
                         Center(
-                          child: Image.asset(R.assetsImagesEmptyWorker, scale: 3.5),
+                          child: Image.asset(R.assetsImagesBelumMemilikiPekerja, scale: 2.0),
                         )
                       ],
                     );
@@ -304,7 +304,7 @@ class OrderPage extends StatelessWidget {
                           ),
                         ),
                         Center(
-                          child: Image.asset(R.assetsImagesGaransi, scale: 3.5),
+                          child: Image.asset(R.assetsImagesDataTidakTersedia, scale: 2.0),
                         )
                       ],
                     );
