@@ -5,11 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:housesolutions/bloc/product_bloc.dart';
-import 'package:housesolutions/model/category.dart';
 import 'package:housesolutions/model/worker.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/all_translation.dart';
@@ -22,8 +20,8 @@ import 'package:responsive_screen/responsive_screen.dart';
 
 class ProductDetailPage extends StatefulWidget {
   int idWorker;
-  Categories category;
-  ProductDetailPage(this.idWorker, this.category);
+  int idCategory;
+  ProductDetailPage(this.idWorker, this.idCategory);
 
   @override
   _ProductDetailPageState createState() => _ProductDetailPageState();
@@ -233,7 +231,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   color: Theme.of(context).primaryColor,
                                   colorBrightness: Brightness.dark,
                                   child: Text("Ambil Pekerja Ini"),
-                                  onPressed: () => bloc.confirmOrder(widget.category.idCategory),
+                                  onPressed: () => bloc.confirmOrder(widget.idCategory),
                                 )
                               ],
                             ),

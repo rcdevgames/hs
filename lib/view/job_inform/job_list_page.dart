@@ -1,6 +1,11 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:housesolutions/bloc/job_bloc.dart';
+import 'package:housesolutions/model/job_inform_model.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/nav_service.dart';
+import 'package:housesolutions/widget/error_page.dart';
+import 'package:housesolutions/widget/loading.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
@@ -12,6 +17,19 @@ class JobListPage extends StatefulWidget {
 class _JobListPageState extends State<JobListPage> {
   final _key = GlobalKey<ScaffoldState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final bloc = BlocProvider.getBloc<JobBloc>();
+
+  @override
+  void initState() { 
+    super.initState();
+    bloc.fetchJobList();
+  }
+
+  @override
+  void dispose() { 
+    BlocProvider.disposeBloc<JobBloc>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,35 +69,63 @@ class _JobListPageState extends State<JobListPage> {
             ),
           ),
           Flexible(
-            child: RefreshIndicator(
-              key: _refreshKey,
-              onRefresh: () => null,
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (ctx, i) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Card(
-                    child: ListTile(
-                      title: Row(
-                        children: <Widget>[
-                          Icon(Icons.location_on, size: 18, color: Theme.of(context).primaryColor),
-                          Expanded(child: Text("Lokasi", style: TextStyle(color: Theme.of(context).primaryColor))),
-                          Text(tanggal(DateTime.now(), shortMonth: true), style: TextStyle(color: Colors.grey))
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 5),
-                          Text("JUDUL Pekerjaan", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 25), softWrap: true),
-                          SizedBox(height: 10),
-                          Text("Pekerja yang berminat : ${0} Orang", style: TextStyle(color: Colors.grey, fontSize: 12))
-                        ],
-                      ),
+            child: StreamBuilder<List<JobInform>>(
+              stream: bloc.getJobList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.length == 0) {
+                    return Center(
+                      child: Image.asset(R.assetsImagesDataTidakTersedia),
+                    );
+                  }
+                  return RefreshIndicator(
+                    key: _refreshKey,
+                    onRefresh: bloc.fetchJobList,
+                    child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (ctx, i) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              onTap: () => navService.navigateTo("/job-detail", snapshot.data[i]),
+                              title: Row(
+                                children: <Widget>[
+                                  Icon(Icons.location_on, size: 18, color: Theme.of(context).primaryColor),
+                                  Expanded(child: Text(snapshot.data[i].jobPlacement, style: TextStyle(color: Theme.of(context).primaryColor))),
+                                  Text(tanggal(snapshot.data[i].jobCreated, shortMonth: true), style: TextStyle(color: Colors.grey))
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(height: 5),
+                                  Text(snapshot.data[i].jobTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 25), softWrap: true),
+                                  SizedBox(height: 10),
+                                  Text("Pekerja yang berminat : ${snapshot.data[i].workers.length} Orang", style: TextStyle(color: Colors.grey, fontSize: 12))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ) 
+                    ), 
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: ErrorPage(
+                      message: snapshot.error, 
+                      buttonText: "Ulangi",
+                      onPressed: () {
+                        bloc.setJobList(null);
+                        bloc.fetchJobList();
+                      }
                     ),
-                  ),
-                ) 
-              ), 
+                  );
+                } return LoadingBlock();
+
+              }
             )
           )
         ],

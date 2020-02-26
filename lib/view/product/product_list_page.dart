@@ -106,7 +106,7 @@ class _ProductListPageState extends State<ProductListPage> {
                     onTap: () async {
                       var loggedin = await sessions.checkAuth();
                       if (loggedin) {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailPage(worker.idWorker, widget.category)));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailPage(worker.idWorker, widget.category.idCategory)));
                       }else {
                         navService.navigateTo("/login");
                       }

@@ -6,6 +6,7 @@ import 'package:housesolutions/model/category_news_model.dart';
 import 'package:housesolutions/model/complaint_model.dart';
 import 'package:housesolutions/model/district.dart';
 import 'package:housesolutions/model/facebook.dart';
+import 'package:housesolutions/model/job_inform_model.dart';
 import 'package:housesolutions/model/my_worker.dart';
 import 'package:housesolutions/model/news_detail_model.dart';
 import 'package:housesolutions/model/news_model.dart';
@@ -35,6 +36,7 @@ import 'product_provider.dart';
 import 'promote_provider.dart';
 import 'region_provider.dart';
 import 'user_provider.dart';
+import 'job_provider.dart';
 
 class Repository {
   // Cancel Transaction HTTP
@@ -105,6 +107,10 @@ class Repository {
   Future<NewsDetail> getDetailNews(String slug) => newsProvider.getDetailNews(slug);
   Future<String> doComment(int id, String message) => newsProvider.doComment(id, message);
   Future<String> doSubComment(int id, int idComment, String message) => newsProvider.doSubComment(id, idComment, message);
+
+  final jobProvider = new JobProvider();
+  Future<List<JobInform>> fetchJobList() => jobProvider.fetchJobList();
+  Future<String> createJob(int id_category, String title, String desc, String placement) => jobProvider.createJob(id_category, title, desc, placement);
 }
 
 final repo = new Repository();

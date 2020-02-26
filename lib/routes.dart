@@ -7,6 +7,7 @@ import 'package:housesolutions/view/complaints/complaint_detail_page.dart';
 import 'package:housesolutions/view/complaints/complaint_form_page.dart';
 import 'package:housesolutions/view/complaints/complaint_list_page.dart';
 import 'package:housesolutions/view/home/layout.dart';
+import 'package:housesolutions/view/job_inform/job_detail_page.dart';
 import 'package:housesolutions/view/job_inform/job_form_page.dart';
 import 'package:housesolutions/view/job_inform/job_list_page.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
@@ -132,6 +133,9 @@ class Routes {
       // Job
       case '/job-list': return MaterialPageRoute(builder: (_) => new JobListPage());
       case '/job-form': return MaterialPageRoute(builder: (_) => new JobFormPage());
+      case '/job-detail': 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => new JobDetailPage(args));
 
         
       default:
