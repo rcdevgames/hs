@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:housesolutions/bloc/order_bloc.dart';
 import 'package:housesolutions/bloc/product_bloc.dart';
 import 'package:housesolutions/model/worker.dart';
 import 'package:housesolutions/r.dart';
@@ -30,6 +31,7 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   final _key = GlobalKey<ScaffoldState>();
   final bloc = BlocProvider.getBloc<ProductBloc>();
+  final orderBloc = BlocProvider.getBloc<OrderBloc>();
 
   @override
   void initState() { 
@@ -40,6 +42,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   void dispose() { 
     bloc.setWorker(null);
+    orderBloc.setRadio("m");
+    orderBloc.setTotalDay(null);
     super.dispose();
   }
 
@@ -92,7 +96,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               children: <Widget>[
                                 Text(snapshot.data.workerName),
                                 Text("${snapshot.data.districtName} || ${snapshot.data.workerAge} Tahun"),
-                                SizedBox(height: 20),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                                   child: Table(
@@ -105,7 +108,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       ),
                                       TableRow(
                                         children: [
-                                          TableCell(child: Text(snapshot.data.workerSalary, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20))),
+                                          TableCell(
+                                            child: StreamBuilder<String>(
+                                              initialData: "m",
+                                              stream: orderBloc.getRadio,
+                                              builder: (context, rad) {
+                                                if (rad.data == "m") {
+                                                  return Text(snapshot.data.workerSalary, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                                }
+                                                return Text("${rupiah(snapshot.data.categoryPpSalary)}/Hari", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                              }
+                                            )
+                                          ),
                                           TableCell(child: Column(
                                             children: <Widget>[
                                               RatingBarIndicator(
@@ -136,7 +150,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.fileAlt),
                                             SizedBox(height: 5),
-                                            Text("Detail Pekerja", softWrap: true, textAlign: TextAlign.center)
+                                            Text("Data Pekerja", softWrap: true, textAlign: TextAlign.center)
                                           ],
                                         )
                                       ),
@@ -160,7 +174,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.clipboard),
                                             SizedBox(height: 5),
-                                            Text("Sertifikat", softWrap: true, textAlign: TextAlign.center)
+                                            Text("Dokumen", softWrap: true, textAlign: TextAlign.center)
                                           ],
                                         )
                                       ),
@@ -172,30 +186,133 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.users),
                                             SizedBox(height: 5),
-                                            Text("Info Lainnya", softWrap: true, textAlign: TextAlign.center)
+                                            Text("Detail Pekerja", softWrap: true, textAlign: TextAlign.center)
                                           ],
                                         )
                                       ),
                                     ),
-                                    Flexible(
-                                      child: FlatButton(
-                                        onPressed: () => MapUtils.openMap(context, snapshot.data.workerLat, snapshot.data.workerLong),
-                                        child: Column(
-                                          children: <Widget>[
-                                            Icon(FontAwesomeIcons.locationArrow),
-                                            SizedBox(height: 5),
-                                            Text("GPS", softWrap: true, textAlign: TextAlign.center)
-                                          ],
-                                        )
-                                      ),
-                                    ),
+                                    // Flexible(
+                                    //   child: FlatButton(
+                                    //     // onPressed: () => MapUtils.openMap(context, snapshot.data.workerLat, snapshot.data.workerLong),
+                                    //     onPressed: () => showAlert(
+                                    //       context: context,
+                                    //       title: "Lokasi Pekerja",
+                                    //       body: "Lakukan pembayaran admin untuk mengetahui lokasi pekerja!",
+                                    //     ),
+                                    //     child: Column(
+                                    //       children: <Widget>[
+                                    //         Icon(FontAwesomeIcons.locationArrow),
+                                    //         SizedBox(height: 5),
+                                    //         Text("Lokasi Pekerja", softWrap: true, textAlign: TextAlign.center)
+                                    //       ],
+                                    //     )
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
-                                SizedBox(height: 30),
-                                Text("ADM ${rupiah(snapshot.data.admPrice)}", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
                                 SizedBox(height: 10),
-                                Text("Total ${rupiah(int.parse(snapshot.data.admPrice) + int.parse(snapshot.data.workerSalary.replaceAll("Rp. ", "").replaceAll(",", "")))}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800)),
-                                SizedBox(height: 30),
+                                Builder(
+                                  builder: (_) {
+                                    if (snapshot.data.workerMore.wmoreStayIn) return SizedBox();
+                                    if (snapshot.data.workerOnlineRegist) return SizedBox();
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(40, 8, 40, 0),
+                                      child: StreamBuilder<String>(
+                                        initialData: "m",
+                                        stream: orderBloc.getRadio,
+                                        builder: (context, snapshot) {
+                                          return Row(
+                                            children: <Widget>[
+                                              Radio(
+                                                groupValue: snapshot.data,
+                                                onChanged: orderBloc.setRadio,
+                                                value: "d",
+                                              ),
+                                              Text("Harian", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+                                              Expanded(child: SizedBox()),
+                                              Radio(
+                                                groupValue: snapshot.data,
+                                                onChanged: orderBloc.setRadio,
+                                                value: "m",
+                                              ),
+                                              Text("Bulanan", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+                                            ],
+                                          );
+                                        }
+                                      ),
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 10),
+                                StreamBuilder<String>(
+                                  initialData: "m",
+                                  stream: orderBloc.getRadio,
+                                  builder: (context, radio) {
+                                    if (radio.data == "m") return SizedBox();
+                                    return StreamBuilder<int>(
+                                      initialData: 1,
+                                      stream: orderBloc.getTotalDay,
+                                      builder: (context, snapshot) {
+                                        return Column(
+                                          children: <Widget>[
+                                            Text("${snapshot.data??1} Hari"),
+                                            Slider(
+                                              divisions: 30,
+                                              value: snapshot.data?.toDouble()??1, 
+                                              onChanged: (i) => orderBloc.setTotalDay(i.toInt()),
+                                              min: 1,
+                                              max: 30,
+                                              label: "Jumlah Hari",
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                    );
+                                  }
+                                ),
+                                SizedBox(height: 10),
+                                StreamBuilder<String>(
+                                  initialData: "m",
+                                  stream: orderBloc.getRadio,
+                                  builder: (context, radio) {
+                                    return StreamBuilder<int>(
+                                      stream: orderBloc.getTotalDay,
+                                      builder: (context, total) {
+                                        if (radio.data == "m") {
+                                          if (!snapshot.data.workerOnlineRegist && !snapshot.data.workerMore.wmoreStayIn) {
+                                            return Text("ADM ${rupiah(1000000)}", style: TextStyle(color: Colors.blue, fontSize: 22, fontWeight: FontWeight.w800));
+                                          } else {
+                                            return Text("ADM ${rupiah(int.parse(snapshot.data.admPrice))}", style: TextStyle(color: Colors.blue, fontSize: 22, fontWeight: FontWeight.w800));
+                                          }
+                                        }else {
+                                            return Text("ADM ${rupiah(int.parse(snapshot.data.admPrice))}/Hari", style: TextStyle(color: Colors.blue, fontSize: 22, fontWeight: FontWeight.w800));
+                                        }
+                                      }
+                                    );
+                                  }
+                                ),
+                                SizedBox(height: 10),
+                                StreamBuilder<String>(
+                                  initialData: "m",
+                                  stream: orderBloc.getRadio,
+                                  builder: (context, radio) {
+                                    if (radio.data == "m") {
+                                      if (!snapshot.data.workerOnlineRegist && !snapshot.data.workerMore.wmoreStayIn) {
+                                        return Text("Total ${rupiah(1000000)}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800));
+                                      } else {
+                                        return Text("Total ${rupiah(int.parse(snapshot.data.admPrice))}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800));
+                                      }
+                                      
+                                    }
+                                    return StreamBuilder<int>(
+                                      stream: orderBloc.getTotalDay,
+                                      builder: (context, total) {
+                                        return Text("Total ${rupiah((int.parse(snapshot.data.admPrice) + int.parse(snapshot.data.categoryPpSalary)) * total.data??1)}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800));
+                                      }
+                                    );
+                                  }
+                                ),
+                                // SizedBox(height: 30),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -221,6 +338,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         context: context,
                                         title: "Chat Pekerja",
                                         body: "Lakukan pembayaran admin untuk dapat terhubung dengan pekerja!",
+                                      )
+                                    ),
+                                    IconButton(
+                                      icon: Icon(FontAwesomeIcons.mapMarkerAlt), 
+                                      onPressed: () => showAlert(
+                                        context: context,
+                                        title: "Lokasi Pekerja",
+                                        body: "Lakukan pembayaran admin untuk dapat melihat lokasi pekerja!",
                                       )
                                     ),
                                   ],
@@ -278,7 +403,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               if (split_name != null && split_name.length > 0) {
                                 name = "${split_name[0][0].toUpperCase()}${split_name.length > 1 ? split_name[1][0].toUpperCase():''}";
                               }
-                              return Center(child: Text("RA", style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center));
+                              return Center(child: Text(name, style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold, color: Colors.white), textAlign: TextAlign.center));
                             },
                           ) : CachedNetworkImage(
                             imageUrl: snapshot.data.workerProfile,

@@ -65,5 +65,28 @@ class JobBloc extends BlocBase {
       }
     }
   }
+  
+  void statusJob(BuildContext context, int id, bool statusJob) async {
+    setLoading(true);
+    try {
+      final result = await repo.statusJob(id, statusJob);
+      await fetchJobList();
+      showAlert(
+        context: context,
+        title: result,
+        actions: [AlertAction(text: "Confirm", onPressed: navService.navigatePop)]
+      );
+    } catch (e) {
+      print("Change Status Job : ${e.toString().replaceAll('Exception: ', '')}");
+      if (e.toString().contains("Unauthorized")) {
+        return navService.navigateReplaceTo("/login", "Sesi Telah Berakhir, Silakan Login Kembali.");
+      }
+      showAlert(
+        context: context,
+        title: "Ubah Status Request Job Gagal!",
+        body: e.toString().replaceAll('Exception: ', '')
+      );
+    }
+  }
 
 }

@@ -29,7 +29,7 @@ class _ProductCategoryPageState extends State<ProductCategoryPage> {
         child: SizedBox(
           width: 60,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SizedBox(
                 width: 50, height: 50,
@@ -102,6 +102,7 @@ class _ProductCategoryPageState extends State<ProductCategoryPage> {
                   if (snapshot.hasData) {
                     return GridView.count(
                       crossAxisCount: 4,
+                      childAspectRatio: 0.8,
                       children: snapshot.data.map((category) {
                         return menuButton(
                           imageUrl: category.categoryImage, 

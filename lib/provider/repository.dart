@@ -111,6 +111,7 @@ class Repository {
   final jobProvider = new JobProvider();
   Future<List<JobInform>> fetchJobList() => jobProvider.fetchJobList();
   Future<String> createJob(int id_category, String title, String desc, String placement) => jobProvider.createJob(id_category, title, desc, placement);
+  Future<String> statusJob(int id, bool active) => jobProvider.statusJob(id, active);
 }
 
 final repo = new Repository();

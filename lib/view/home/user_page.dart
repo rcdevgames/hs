@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
+import 'package:housesolutions/bloc/order_bloc.dart';
 import 'package:housesolutions/bloc/user_bloc.dart';
 import 'package:housesolutions/model/user_model.dart';
 import 'package:housesolutions/r.dart';
@@ -33,6 +34,7 @@ class UserPage extends StatelessWidget {
     final Function wp = Screen(context).wp;
     final Function hp = Screen(context).hp;
     final bloc = BlocProvider.getBloc<UserBloc>();
+    final oderBloc = BlocProvider.getBloc<OrderBloc>();
 
     return SafeArea(
       child: StreamBuilder<User>(
@@ -98,7 +100,11 @@ class UserPage extends StatelessWidget {
                                   child: Column(
                                     children: <Widget>[
                                       Text("GAJI PEKERJA YA!", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600)),
-                                      Text(rupiah(0), textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
+                                      Builder(
+                                        builder: (context) {
+                                          return Text(rupiah(0), textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                        }
+                                      ),
                                       Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         height: 20,

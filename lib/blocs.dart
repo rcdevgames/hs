@@ -1,4 +1,5 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:housesolutions/bloc/notification_bloc.dart';
 import 'bloc/auth_bloc.dart';
 import 'bloc/complaint_bloc.dart';
 import 'bloc/home_bloc.dart';
@@ -19,4 +20,5 @@ final List<Bloc<BlocBase>> blocs = [
   Bloc((i) => ComplaintBloc()),
   Bloc((i) => NewsBloc()),
   Bloc((i) => JobBloc()),
+  Bloc((i) => NotificationBloc()),
 ];

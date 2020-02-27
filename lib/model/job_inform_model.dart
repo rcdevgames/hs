@@ -24,6 +24,7 @@ class JobInform {
     String customerProvince;
     String customerDistrict;
     String categoryName;
+    bool jobPublish;
     List<Pekerja> workers;
 
     JobInform({
@@ -42,6 +43,7 @@ class JobInform {
         this.customerProvince,
         this.customerDistrict,
         this.categoryName,
+        this.jobPublish,
         this.workers,
     });
 
@@ -61,6 +63,7 @@ class JobInform {
         customerProvince: json["customer_province"] == null ? null : json["customer_province"],
         customerDistrict: json["customer_district"] == null ? null : json["customer_district"],
         categoryName: json["category_name"] == null ? null : json["category_name"],
+        jobPublish: json["job_publish"] == null ? null : json["job_publish"],
         workers: json["workers"] == null ? null : List<Pekerja>.from(json["workers"].map((x) => Pekerja.fromJson(x))),
     );
 
@@ -80,6 +83,7 @@ class JobInform {
         "customer_province": customerProvince == null ? null : customerProvince,
         "customer_district": customerDistrict == null ? null : customerDistrict,
         "category_name": categoryName == null ? null : categoryName,
+        "job_publish": jobPublish == null ? null : jobPublish,
         "workers": workers == null ? null : List<dynamic>.from(workers.map((x) => x.toJson())),
     };
 }

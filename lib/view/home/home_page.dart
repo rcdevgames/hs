@@ -131,6 +131,25 @@ class HomePage extends StatelessWidget {
                           onPressed: () => navService.navigateTo("/product-category", "online")
                         ),
                         menuButton(
+                          imageUrl: R.assetsImagesJobInform,
+                          title: "Request Pekerja",
+                          onPressed: () => navService.navigateTo("/job-list")
+                        ),
+                        menuButton(
+                          imageUrl: R.assetsImagesHealty,
+                          title: "Solusi Kesehatan",
+                          onPressed: () => navService.navigateTo("/news-list", 2)
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        menuButton(
+                          imageUrl: R.assetsImagesPp,
+                          title: "Mitra PP/Harian",
+                          onPressed: () => navService.navigateTo("/product-category", "pp")
+                        ),
+                        menuButton(
                           imageUrl: R.assetsImagesNews,
                           title: "News",
                           onPressed: () => navService.navigateTo("/promote-list")
@@ -145,33 +164,14 @@ class HomePage extends StatelessWidget {
                     Column(
                       children: [
                         menuButton(
-                          imageUrl: R.assetsImagesPp,
-                          title: "Mitra PP/Harian",
-                          onPressed: () => navService.navigateTo("/product-category", "pp")
-                        ),
-                        menuButton(
-                          imageUrl: R.assetsImagesKitchen,
-                          title: "Solusi Dapur",
-                          onPressed: () => navService.navigateTo("/news-list", 1)
-                        ),
-                        menuButton(
-                          imageUrl: R.assetsImagesJobInform,
-                          title: "Request Pekerja",
-                          onPressed: () => navService.navigateTo("/job-list")
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        menuButton(
                           imageUrl: R.assetsImagesRegular,
                           title: "Mitra Regular",
                           onPressed: () => navService.navigateTo("/product-category", "regular")
                         ),
                         menuButton(
-                          imageUrl: R.assetsImagesHealty,
-                          title: "Solusi Kesehatan",
-                          onPressed: () => navService.navigateTo("/news-list", 2)
+                          imageUrl: R.assetsImagesKitchen,
+                          title: "Solusi Dapur",
+                          onPressed: () => navService.navigateTo("/news-list", 1)
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesNotification,

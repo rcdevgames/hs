@@ -100,7 +100,7 @@ class _ProductListPageState extends State<ProductListPage> {
               child: GridView.count(
                 primary: true,
                 crossAxisCount: 2,
-                childAspectRatio: 0.80,
+                childAspectRatio: 0.6,
                 children: snapshot.data.data.map((worker) {
                   return InkWell(
                     onTap: () async {

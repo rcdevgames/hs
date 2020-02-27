@@ -38,24 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Image.asset(
-              "assets/Images/icon.png",
-            ),
-          ),
-          Center(
-            child: Image.asset(
-              "assets/Images/logo.png",
-              width: MediaQuery.of(context).size.width / 1.8,
-            ),
-          ),
-          // SizedBox(height: 50),
-          // LoadingBlock(Theme.of(context).primaryColor)
-        ],
+      body: Center(
+        child: Image.asset(
+          "assets/Images/icon.png",
+        ),
       ),
     );
   }

@@ -192,39 +192,40 @@ class OrderBloc extends BlocBase {
     if (_paymentMethod.value == "tf" || _paymentMethod.value == "midtrans") {
       navService.navigateTo("/process-payment");
       setLoading(true);
-      try {
-        var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value, _paymentMethod.value);
-        await fetchOrders();
-        setLoading(false);
-        showAlert(
-          context: context,
-          title: "Order Success",
-          body: result,
-          barrierDismissible: false,
-          actions: [
-            AlertAction(
-              text: "Confirm",
-              onPressed: () {
-                var bloc = BlocProvider.getBloc<LayoutBloc>();
-                bloc.setIndex(1);
-                navService.navigatePopUntil("/main");
-              }
-            )
-          ]
-        );
-      } catch (e) {
-        setLoading(false);
-        print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
-        if (e.toString().contains("Unauthorized")) {
-          sessions.clear();
-          return navService.navigateReplaceTo("/login", "unauthorized");
-        }
-        showAlert(
-          context: context,
-          title: "Order Error",
-          body: e.toString().replaceAll("Exception: ", "")
-        );
-      }
+      // try {
+      //   var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value, _paymentMethod.value);
+      //   await fetchOrders();
+      //   setLoading(false);
+      //   // final flutrans = Flutrans();
+      //   // showAlert(
+      //   //   context: context,
+      //   //   title: "Order Success",
+      //   //   body: result,
+      //   //   barrierDismissible: false,
+      //   //   actions: [
+      //   //     AlertAction(
+      //   //       text: "Confirm",
+      //   //       onPressed: () {
+      //   //         var bloc = BlocProvider.getBloc<LayoutBloc>();
+      //   //         bloc.setIndex(1);
+      //   //         navService.navigatePopUntil("/main");
+      //   //       }
+      //   //     )
+      //   //   ]
+      //   // );
+      // } catch (e) {
+      //   setLoading(false);
+      //   print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
+      //   if (e.toString().contains("Unauthorized")) {
+      //     sessions.clear();
+      //     return navService.navigateReplaceTo("/login", "unauthorized");
+      //   }
+      //   showAlert(
+      //     context: context,
+      //     title: "Order Error",
+      //     body: e.toString().replaceAll("Exception: ", "")
+      //   );
+      // }
     }else {
       showAlert(
         context: context, 
@@ -322,32 +323,35 @@ class OrderBloc extends BlocBase {
     return file;
   }
 
-  void payMidtrans(User userData, ) async {
+  void payMidtrans(int totalPayment) async {
     final flutrans = Flutrans();
+    final userData = await sessions.loadUser();
     
     //Init the client ID you URL base
-    flutrans.init("YOUR_CLIENT_ID", "YOUR_URL_BASE", env: "sandbox");
+    flutrans.init("Mid-client-P1zZ0rKvu19Q9RX-", "http://api.housesolutionsindonesia.com/api/v1/mid_confirm/");
 
     //Setup the callback when payment finished
     flutrans.setFinishCallback((finished) {
         //finished is TransactionFinished
+        print("Status : " + finished.status + " | " + finished.statusMessage);
+        print("Response : " + finished.response);
+        print("Canceled : " + finished.transactionCanceled.toString());
     });
 
     //Make payment
     flutrans
     .makePayment(
         MidtransTransaction(
-            7500,
+            totalPayment,
             MidtransCustomer(userData.customerName.split("")[0], userData.customerName.split("")[userData.customerName.split("").length -1], userData.customerEmail, userData.customerHandphone),
             <MidtransItem>[
               MidtransItem(
                   "5c18ea1256f67560cb6a00cdde3c3c7a81026c29",
-                  7500,
-                  2,
-                  "USB FlashDisk",
+                  totalPayment,
+                  1,
+                  "Administrasi HS",
               )
             ],
-            skipCustomer: false,
             customField1: "ANYCUSTOMFIELD"),
     )
     .catchError((err) => print("ERROR $err"));

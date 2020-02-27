@@ -103,7 +103,13 @@ class _JobListPageState extends State<JobListPage> {
                                   SizedBox(height: 5),
                                   Text(snapshot.data[i].jobTitle, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 25), softWrap: true),
                                   SizedBox(height: 10),
-                                  Text("Pekerja yang berminat : ${snapshot.data[i].workers.length} Orang", style: TextStyle(color: Colors.grey, fontSize: 12))
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text("Pekerja yang berminat : ${snapshot.data[i].workers.length} Orang", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                      Text(snapshot.data[i].jobPublish ? "Dipublikasikan":"Tidak Dipublikasi", style: TextStyle(color: snapshot.data[i].jobPublish ? Colors.green : Colors.red))
+                                    ],
+                                  )
                                 ],
                               ),
                             ),

@@ -1,7 +1,7 @@
 name: housesolutions
 description: House Solutions Majikan.
 
-version: 1.6.1+54
+version: 1.6.2+55
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
