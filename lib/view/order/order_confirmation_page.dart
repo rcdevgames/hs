@@ -22,11 +22,12 @@ class ConfirmationOrder extends StatefulWidget {
 class _ConfirmationOrderState extends State<ConfirmationOrder> {
   final _key = GlobalKey<ScaffoldState>();
   final bloc = BlocProvider.getBloc<OrderBloc>();
+  var total = 0;
 
   @override
   void initState() { 
     super.initState();
-    bloc.setPaymentMethod("midtrans");
+    // bloc.setPaymentMethod("midtrans");
   }
 
   @override
@@ -238,11 +239,16 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                               stream: bloc.getTotalDay,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
+                                  total = (int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)) * snapshot.data;
                                   return Text(rupiah((int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)) * snapshot.data), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
-                                } return Text(rupiah(int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                                } 
+                                total = int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary);
+                                return Text(rupiah(int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
                               }
                             );
-                          } return Text(int.parse(widget.data.admPrice) > 50000 ? rupiah(widget.data.admPrice) : rupiah(1000000), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                          } 
+                          total = int.parse(widget.data.admPrice) > 50000 ? widget.data.admPrice : 1000000;
+                          return Text(int.parse(widget.data.admPrice) > 50000 ? rupiah(widget.data.admPrice) : rupiah(1000000), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
                         }
                       )
                     ],
@@ -276,10 +282,11 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                           ),
                           Card(
                             child: ListTile(
-                              onTap: () => bloc.setPaymentMethod("midtrans"),
+                              onTap: Platform.isAndroid ? () => bloc.setPaymentMethod("midtrans") : null,
+                              enabled: Platform.isAndroid,
                               leading: Image.asset(R.assetsImagesMidtrans, width: 60, height: 60),
                               title: Text("Midtrans"),
-                              subtitle: Text("Gopay, Transfer, Credit Card"),
+                              subtitle: Platform.isAndroid ? Text("Gopay, Transfer, Credit Card") : Text("Temporary not available"),
                               trailing: snapshot.hasData && snapshot.data == "midtrans" ? Icon(Icons.check, color: Theme.of(context).primaryColor):null,
                               selected: snapshot.hasData && snapshot.data == "midtrans",
                             ),
@@ -299,8 +306,8 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                 stream: bloc.isLoading,
                 builder: (context, snapshot) {
                   return RaisedButton(
-                    // onPressed: snapshot.data ? null : () => bloc.doOrder(context, widget.data.idWorker, widget.idCategory),
-                    onPressed: snapshot.data ? null : () => bloc.payMidtrans(10000),
+                    onPressed: snapshot.data ? null : () => bloc.doOrder(context, widget.data.idWorker, widget.idCategory, total),
+                    // onPressed: snapshot.data ? null : () => bloc.payMidtrans(total, "com.midtrans:uikit:1.21.2-SANDBOX"),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(snapshot.data ? "Memproses Trasaksi...":"Proses Transaksi", style: TextStyle(fontSize: 18)),

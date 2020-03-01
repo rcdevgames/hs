@@ -291,7 +291,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         colorBrightness: Brightness.dark,
-                        onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : int.parse(snapshot.data.transAdmPrice)]) : navService.navigateTo("/dopay-midtrans"),
+                        onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : int.parse(snapshot.data.transAdmPrice)]) : bloc.payMidtrans(!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : int.parse(snapshot.data.transAdmPrice), snapshot.data.idTrans.toString()),
                         child: Text("Lakukan Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                       ),
                     ),

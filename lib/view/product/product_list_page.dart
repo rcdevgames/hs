@@ -96,7 +96,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
             return LazyLoadRefreshIndicator(
               onRefresh: () => bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular),
-              onEndOfPage: () => snapshot.data.page <= snapshot.data.paging ? null : bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular, snapshot.data.page + 1),
+              onEndOfPage: () => snapshot.data.page == snapshot.data.paging ? null : bloc.fetchWorker(widget.category.idCategory, widget.stayIn, widget.regular, snapshot.data.page + 1),
               child: GridView.count(
                 primary: true,
                 crossAxisCount: 2,
@@ -148,7 +148,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   if (worker.wmoreStayIn) {
                                     return Text("Gaji : ${rupiah(worker.workerSalary)}/Bulan", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
                                   }else{
-                                    return Text("Gaji : ${rupiah(worker.categoryPpSalary)}/Hari", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
+                                    return Text("Gaji : ${rupiah(worker.workerSalary)}/Bulan\n\tGaji : ${rupiah(worker.categoryPpSalary)}/Hari", style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold));
                                   }
                                 }
                               }

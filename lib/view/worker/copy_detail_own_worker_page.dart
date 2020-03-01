@@ -5,37 +5,35 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:housesolutions/bloc/product_bloc.dart';
-import 'package:housesolutions/model/category.dart';
-import 'package:housesolutions/model/worker.dart';
+import 'package:housesolutions/bloc/order_bloc.dart';
+import 'package:housesolutions/model/my_worker.dart';
+import 'package:housesolutions/model/own_worker.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/widget/error_page.dart';
 import 'package:housesolutions/widget/loading.dart';
-import 'package:indonesia/indonesia.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
-class ProductDetailPage extends StatefulWidget {
-  int idWorker;
-  Categories category;
-  ProductDetailPage(this.idWorker, this.category);
+class DetailOwnWorkerPage extends StatefulWidget {
+  OwnWorkers data;
+  DetailOwnWorkerPage(this.data);
 
   @override
-  _ProductDetailPageState createState() => _ProductDetailPageState();
+  _DetailOwnWorkerPageState createState() => _DetailOwnWorkerPageState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage> {
+class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
   final _key = GlobalKey<ScaffoldState>();
-  final bloc = BlocProvider.getBloc<ProductBloc>();
+  final bloc = BlocProvider.getBloc<OrderBloc>();
 
   @override
   void initState() { 
     super.initState();
-    bloc.workerDetail(widget.idWorker);
+    bloc.loadWorker(widget.data.idCworker);
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     bloc.setWorker(null);
     super.dispose();
   }
@@ -98,7 +96,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final Function wp = Screen(context).wp;
@@ -107,10 +104,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        title: Text(allTranslations.text("WORKER_DETAIL")),
+        title: Text("Detail ${widget.data.workerName}"),
         brightness: Platform.isIOS ? Brightness.light:Brightness.dark,
       ),
-      body: StreamBuilder<Worker>(
+      body: StreamBuilder<MyWorker>(
         stream: bloc.getWorker,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -158,20 +155,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 Text(snapshot.data.districtName, style: TextStyle(color: Colors.white)),
                                 SizedBox(height: 5),
                                 Text("Gaji : ", style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white)),
-                                Builder(
-                                  builder: (context) {
-                                    if (snapshot.data.workerOnlineRegist) {
-                                      return Text("${rupiah(1500000)}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
-                                    }else {
-                                      if (snapshot.data.workerMore.wmoreStayIn) {
-                                        return Text("${snapshot.data.workerSalary}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
-                                      }else{
-                                        return Text("${rupiah(snapshot.data.categoryPpSalary)}/Hari\n${snapshot.data.workerSalary}/Bulan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold));
-                                      }
-                                    }
-                                  }
-                                ),
-                                // Text(snapshot.data.workerSalary, style: TextStyle(color: Colors.white)),
                                 SizedBox(height: 5),
                               ],
                             ),
@@ -205,27 +188,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       profileData(context, key: "Anak", value: "${snapshot.data.workerMore.wmoreChildren??0} Anak"),
                       profileData(context, key: "Tinggi Badan", value: snapshot.data.workerHeight),
                       profileData(context, key: "Berat Badan", value: snapshot.data.workerWeight),
-                      Builder(
-                        builder: (context) {
-                          if (!snapshot.data.workerOnlineRegist && !snapshot.data.workerMore.wmoreStayIn) {
-                            return profileData(context, key: "Adminstrasi", value: "${rupiah(snapshot.data.admPrice)}/Hari | ${rupiah(1000000)}", valueBold: true);  
-                          }
-                          return profileData(context, key: "Adminstrasi", value: rupiah(snapshot.data.admPrice), valueBold: true);
-                        }
-                      ),
-                      Builder(
-                        builder: (context) {
-                          if (snapshot.data.workerOnlineRegist) {
-                            return profileData(context, key: "Gaji", value: "${rupiah(1500000)}/Bulan", valueBold: true);
-                          }else {
-                            if (snapshot.data.workerMore.wmoreStayIn) {
-                              return profileData(context, key: "Gaji", value: "${snapshot.data.workerSalary}/Bulan", valueBold: true);
-                            }else{
-                              return profileData(context, key: "Gaji", value: "${rupiah(snapshot.data.categoryPpSalary)}/Hari | ${snapshot.data.workerSalary}/Bulan", valueBold: true);
-                            }
-                          }
-                        }
-                      ),
                       profileData(context, key: "Kota/Kabupaten", value: snapshot.data.districtName),
                       profileData(context, key: "Provinsi", value: snapshot.data.provinceName),
                       profileData(context, key: "Kerja Luar Negeri", value: snapshot.data.workerMore.wmoreAbroadEx != null && snapshot.data.workerMore.wmoreAbroadEx ? "Berpengalaman":"Tidak Berpengalaman"),
@@ -332,30 +294,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 ],
               ),
             );
-          } else if (snapshot.hasError) {
+          } else if(snapshot.hasError) {
             return Center(
               child: ErrorPage(
                 message: snapshot.error,
-                buttonText: allTranslations.text("TRY_AGAIN"),
+                buttonText: allTranslations.text("TRYAGAIN"),
                 onPressed: () {
                   bloc.setWorker(null);
-                  bloc.workerDetail(widget.idWorker);
+                  bloc.loadWorker(widget.data.idCworker);
                 },
               ),
             );
           } return LoadingBlock();
         }
       ),
-      floatingActionButton: StreamBuilder<Worker>(
-        stream: bloc.getWorker,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return FloatingActionButton.extended(
-              label: Text("Saya Ambil Pekerja ini.", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-              onPressed: () => bloc.confirmOrder(widget.category.idCategory),
-            );
-          } return SizedBox();
-        }
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => navService.navigateTo("/change-worker"),
+        icon: Icon(Icons.refresh, color: Colors.white),
+        label: Text("Saya ingin tukar pekerja ini", style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

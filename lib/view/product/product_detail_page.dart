@@ -305,9 +305,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       
                                     }
                                     return StreamBuilder<int>(
+                                      initialData: 1,
                                       stream: orderBloc.getTotalDay,
                                       builder: (context, total) {
-                                        return Text("Total ${rupiah((int.parse(snapshot.data.admPrice) + int.parse(snapshot.data.categoryPpSalary)) * total.data??1)}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800));
+                                        return Text("Total ${rupiah((int.parse(snapshot.data.admPrice??0) + int.parse(snapshot.data.categoryPpSalary??0)) * (total.data??1))}", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800));
                                       }
                                     );
                                   }

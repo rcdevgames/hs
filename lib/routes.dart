@@ -12,6 +12,7 @@ import 'package:housesolutions/view/job_inform/job_form_page.dart';
 import 'package:housesolutions/view/job_inform/job_list_page.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
 import 'package:housesolutions/view/news/list_news_page.dart';
+import 'package:housesolutions/view/order/order_status_midtrans.dart';
 import 'package:housesolutions/view/product/detail/product_about_page.dart';
 import 'package:housesolutions/view/product/detail/product_certified_page.dart';
 import 'package:housesolutions/view/product/detail/product_more_page.dart';
@@ -104,6 +105,9 @@ class Routes {
       case "/dopay-midtrans": 
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => PaymentMidtransPage());
+      case "/pay-midtrans-status": 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => OrderStatusMidtransPage(args));
       case "/invoice": 
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => InvoicePDF(args[0], args[1]));

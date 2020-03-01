@@ -46,7 +46,7 @@ class ProductAboutPage extends StatelessWidget {
         brightness: Brightness.dark,
         title: Text("Tentang Pekerja"),
       ),
-      body: profileDataBig(context, key: "Tentang Pekerja", value: data),
+      body: SingleChildScrollView(child: profileDataBig(context, key: "Tentang Pekerja", value: data)),
     );
   }
 }

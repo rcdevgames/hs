@@ -65,10 +65,7 @@ class ProductOtherPage extends StatelessWidget {
                             children: <Widget>[
                               Icon(Icons.check_box, color: Theme.of(context).primaryColor),
                               SizedBox(width: 5),
-                              SizedBox(
-                                width: wp(80),
-                                child: Text(skill, softWrap: true)
-                              )
+                              Flexible(child: Text(skill, softWrap: true))
                             ],
                           );
                         }).toList(),

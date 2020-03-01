@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' as prefix0;
 import 'package:housesolutions/model/bank.dart';
 import 'package:housesolutions/model/my_worker.dart';
+import 'package:housesolutions/model/order_result.dart';
 import 'package:housesolutions/model/own_worker.dart';
 import 'package:housesolutions/model/payment.dart';
 import 'package:housesolutions/model/payment_detail.dart';
@@ -68,13 +69,7 @@ class OrderProvider {
     }
   }
 
-  Future<String> requestWorker(int idWorker, int idCategory, int total_day, String payment_method) async {
-    print({
-      "id_worker" : idWorker,
-      "id_category" : idCategory,
-      "total_day": total_day,
-      "trans_payment_method": payment_method
-    });
+  Future<OrderResult> requestWorker(int idWorker, int idCategory, int total_day, String payment_method) async {
     final response = await api.post("/customer/requestPayment_v2", auth: true, body: {
       "id_worker" : idWorker,
       "id_category" : idCategory,
@@ -83,7 +78,7 @@ class OrderProvider {
     });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return api.getContent(response.body);
+      return prefix0.compute(orderResultFromJson, api.getContent(response.body));
     } else if(response.statusCode == 401) {
       throw Exception("Unauthorized");
     } else {
