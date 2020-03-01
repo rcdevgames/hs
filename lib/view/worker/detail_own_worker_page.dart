@@ -13,11 +13,13 @@ import 'package:housesolutions/model/my_worker.dart';
 import 'package:housesolutions/model/own_worker.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/all_translation.dart';
+import 'package:housesolutions/util/map.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/widget/error_page.dart';
 import 'package:housesolutions/widget/loading.dart';
 import 'package:indonesia/indonesia.dart';
 import 'package:responsive_screen/responsive_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailOwnWorkerPage extends StatefulWidget {
   OwnWorkers data;
@@ -186,7 +188,14 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                   children: <Widget>[
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-more", snapshot.data),
+                                        onPressed: () async {
+                                          String url = "tel:${snapshot.data.workerHandphone}";
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw "Could not lauch $url";
+                                          }
+                                        },
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.phone),
@@ -198,7 +207,14 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-about", snapshot.data.workerDesc),
+                                        onPressed: () async {
+                                          String url = "https://wa.me/62${snapshot.data.workerHandphone.toString().replaceAll("Exception: ", "").substring(1, snapshot.data.workerHandphone.toString().replaceAll("Exception: ", "").length)}";
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw "Could not lauch $url";
+                                          }
+                                        },
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.whatsapp),
@@ -210,7 +226,11 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-certified", snapshot.data.workerCertificate),
+                                        onPressed: () => showAlert(
+                                          context: null,
+                                          title: "Chat Pekerja",
+                                          body: "Mohon maaf untuk sementara fitur ini belum dapat digunakan."
+                                        ),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.commentDots),
@@ -222,7 +242,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-other", [snapshot.data.workerPlacement, snapshot.data.workerSkills]),
+                                        onPressed: () => MapUtils.openMap(context, snapshot.data.workerLat, snapshot.data.workerLong),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.mapMarkerAlt),
