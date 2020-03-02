@@ -244,7 +244,7 @@ class OrderBloc extends BlocBase {
     }
   }
 
-  void requestChangeWorker(GlobalKey<FormState> key, ) async {
+  void requestChangeWorker(GlobalKey<FormState> key) async {
     if (key.currentState.validate()) {
       key.currentState.save();
       setLoading(true);
@@ -333,6 +333,8 @@ class OrderBloc extends BlocBase {
   }
 
   void payMidtrans(int totalPayment, String orderId) async {
+    print("orderId : $orderId");
+    print("totalPayment : $totalPayment");
     // initMidtrans();
     final userData = await sessions.loadUser();
     print(userData.toJson());
@@ -340,12 +342,13 @@ class OrderBloc extends BlocBase {
     //Make payment
     flutrans.makePayment(
       MidtransTransaction(
-        totalPayment,
+        orderId,
+        100,
         MidtransCustomer(userData.customerName, userData.idCustomer.toString(), userData.customerEmail, userData.customerHandphone),
         <MidtransItem>[
           MidtransItem(
               orderId,
-              totalPayment,
+              100,
               1,
               "Administrasi HS",
           )

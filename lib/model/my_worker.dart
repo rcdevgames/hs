@@ -24,15 +24,19 @@ class MyWorker {
     DateTime workerBirthdate;
     String workerRating;
     String workerSalary;
+    String workerSalaryDaily;
     String workerDesc;
     String workerPath;
     String workerWeight;
     String workerHeight;
+    bool wmoreStayIn;
+    dynamic workerLat;
+    dynamic workerLong;
+    bool onlineRegist;
     String districtName;
     String provinceName;
     String transAttempt;
-    String workerLong;
-    String workerLat;
+    int totalDay;
     int workerAge;
     String workerProfile;
     String workerSalaryFormatted;
@@ -62,15 +66,19 @@ class MyWorker {
         this.workerBirthdate,
         this.workerRating,
         this.workerSalary,
+        this.workerSalaryDaily,
         this.workerDesc,
         this.workerPath,
         this.workerWeight,
         this.workerHeight,
+        this.wmoreStayIn,
+        this.workerLat,
+        this.workerLong,
+        this.onlineRegist,
         this.districtName,
         this.provinceName,
         this.transAttempt,
-        this.workerLong,
-        this.workerLat,
+        this.totalDay,
         this.workerAge,
         this.workerProfile,
         this.workerSalaryFormatted,
@@ -101,15 +109,19 @@ class MyWorker {
         workerBirthdate: json["worker_birthdate"] == null ? null : DateTime.parse(json["worker_birthdate"]),
         workerRating: json["worker_rating"] == null ? null : json["worker_rating"],
         workerSalary: json["worker_salary"] == null ? null : json["worker_salary"],
+        workerSalaryDaily: json["worker_salary_daily"] == null ? null : json["worker_salary_daily"],
         workerDesc: json["worker_desc"] == null ? null : json["worker_desc"],
         workerPath: json["worker_path"] == null ? null : json["worker_path"],
         workerWeight: json["worker_weight"] == null ? null : json["worker_weight"],
         workerHeight: json["worker_height"] == null ? null : json["worker_height"],
+        wmoreStayIn: json["wmore_stay_in"] == null ? null : json["wmore_stay_in"],
+        workerLat: json["worker_lat"],
+        workerLong: json["worker_long"],
+        onlineRegist: json["online_regist"] == null ? null : json["online_regist"],
         districtName: json["district_name"] == null ? null : json["district_name"],
         provinceName: json["province_name"] == null ? null : json["province_name"],
         transAttempt: json["trans_attempt"] == null ? null : json["trans_attempt"],
-        workerLong: json["worker_long"] == null ? null : json["worker_long"],
-        workerLat: json["worker_lat"] == null ? null : json["worker_lat"],
+        totalDay: json["totalDay"] == null ? null : json["totalDay"],
         workerAge: json["worker_age"] == null ? null : json["worker_age"],
         workerProfile: json["worker_profile"] == null ? null : json["worker_profile"],
         workerSalaryFormatted: json["worker_salary_formatted"] == null ? null : json["worker_salary_formatted"],
@@ -140,15 +152,19 @@ class MyWorker {
         "worker_birthdate": workerBirthdate == null ? null : "${workerBirthdate.year.toString().padLeft(4, '0')}-${workerBirthdate.month.toString().padLeft(2, '0')}-${workerBirthdate.day.toString().padLeft(2, '0')}",
         "worker_rating": workerRating == null ? null : workerRating,
         "worker_salary": workerSalary == null ? null : workerSalary,
+        "worker_salary_daily": workerSalaryDaily == null ? null : workerSalaryDaily,
         "worker_desc": workerDesc == null ? null : workerDesc,
         "worker_path": workerPath == null ? null : workerPath,
         "worker_weight": workerWeight == null ? null : workerWeight,
         "worker_height": workerHeight == null ? null : workerHeight,
+        "wmore_stay_in": wmoreStayIn == null ? null : wmoreStayIn,
+        "worker_lat": workerLat,
+        "worker_long": workerLong,
+        "online_regist": onlineRegist == null ? null : onlineRegist,
         "district_name": districtName == null ? null : districtName,
         "province_name": provinceName == null ? null : provinceName,
         "trans_attempt": transAttempt == null ? null : transAttempt,
-        "worker_long": workerLong == null ? null : workerLong,
-        "worker_lat": workerLat == null ? null : workerLat,
+        "totalDay": totalDay == null ? null : totalDay,
         "worker_age": workerAge == null ? null : workerAge,
         "worker_profile": workerProfile == null ? null : workerProfile,
         "worker_salary_formatted": workerSalaryFormatted == null ? null : workerSalaryFormatted,

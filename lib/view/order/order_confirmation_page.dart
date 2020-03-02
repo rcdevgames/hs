@@ -247,7 +247,7 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                               }
                             );
                           } 
-                          total = int.parse(widget.data.admPrice) > 50000 ? widget.data.admPrice : 1000000;
+                          total = int.parse(widget.data.admPrice) > 50000 ? int.parse(widget.data.admPrice) : 1000000;
                           return Text(int.parse(widget.data.admPrice) > 50000 ? rupiah(widget.data.admPrice) : rupiah(1000000), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
                         }
                       )

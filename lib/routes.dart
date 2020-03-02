@@ -36,6 +36,10 @@ import 'package:housesolutions/view/user/user_edit_page.dart';
 import 'package:housesolutions/view/user/user_settings_page.dart';
 import 'package:housesolutions/view/welcome/select_lang_page.dart';
 import 'package:housesolutions/view/welcome/welcome_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_about_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_certified_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_more_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_other_page.dart';
 import 'package:housesolutions/view/worker/detail_own_worker_page.dart';
 import 'package:housesolutions/view/worker/request_change_worker_page.dart';
 
@@ -117,6 +121,18 @@ class Routes {
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => DetailOwnWorkerPage(args));
       case "/change-worker": return MaterialPageRoute(builder: (_) => RequestChangeWorkerPage());
+      case "/worker-more":
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerMorePage(args));
+      case "/worker-about":
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerAboutPage(args));
+      case "/worker-certified":
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerCertifiedPage(args));
+      case "/worker-other":
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerOtherPage(args[0], args[1]));
 
 
       // UserPage

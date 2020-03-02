@@ -135,7 +135,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                           Builder(
                                             builder: (_) {
                                               if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                                return Text("Gaji Harian : ${rupiah(100000)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
+                                                return Text("Gaji Harian : ${rupiah(worker.workerSalaryDaily)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
                                               }
                                               return Text("Gaji : ${rupiah(worker.workerSalary)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
                                             }
@@ -235,7 +235,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text("Total gaji", style: TextStyle(fontSize: 17, color: Colors.grey)),
-                                        Text(rupiah((100000*int.parse(snapshot.data.transTotalDay))), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                                        Text(rupiah(int.parse(snapshot.data.detail[0].workerSalaryDaily)*int.parse(snapshot.data.transTotalDay)), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                                       ],
                                     ),
                                     Divider(height: 25),
@@ -253,7 +253,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 builder: (_) {
                                   if (!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn) {
                                     if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                      return Text("(@${rupiah(snapshot.data.transAdmPrice)}) ${rupiah(int.parse(snapshot.data.transAdmPrice)*int.parse(snapshot.data.transTotalDay))}", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
+                                      return Text("${rupiah(snapshot.data.transAdmPrice)}", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
                                     }
                                     return Text(rupiah(1000000), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
                                   }
@@ -271,7 +271,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 builder: (_) {
                                   if (!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn) {
                                     if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                      return Text(rupiah((int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay)), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
+                                      return Text(rupiah(int.parse(snapshot.data.transAdmPrice) + (int.parse(snapshot.data.detail[0].workerSalaryDaily) * int.parse(snapshot.data.transTotalDay))), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
                                     }
                                     return Text(rupiah(1000000), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
                                   }

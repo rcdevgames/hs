@@ -107,7 +107,20 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                       TableRow(
                                         children: [
                                           TableCell(
-                                            child: Text(rupiah(snapshot.data.workerSalary), textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20))
+                                            child: Builder(
+                                              builder: (context) {
+                                                if (snapshot.data.onlineRegist??false) {
+                                                  return Text(rupiah(1500000), textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                                }else {
+                                                  if (snapshot.data.workerMore.wmoreStayIn) {
+                                                    return Text("${rupiah(snapshot.data.workerSalary)}/Bulan", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                                  }else{
+                                                    return Text("${rupiah(snapshot.data.workerSalaryDaily??0)}/Hari\n3 Hari : ${rupiah(int.parse(snapshot.data.workerSalaryDaily??'0') * (snapshot.data.totalDay??0))}", textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20));
+                                                  }
+                                                }
+                                              }
+                                            ),
+                                            // Text(rupiah(snapshot.data.workerSalary), textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20))
                                           ),
                                           TableCell(child: Column(
                                             children: <Widget>[
@@ -134,7 +147,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                   children: <Widget>[
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-more", snapshot.data),
+                                        onPressed: () => navService.navigateTo("/worker-more", snapshot.data),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.fileAlt),
@@ -146,7 +159,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-about", snapshot.data.workerDesc),
+                                        onPressed: () => navService.navigateTo("/worker-about", snapshot.data.workerDesc),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.fileSignature),
@@ -158,7 +171,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-certified", snapshot.data.workerCertificate),
+                                        onPressed: () => navService.navigateTo("/worker-certified", snapshot.data.workerCertificate),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.clipboard),
@@ -170,7 +183,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/product-other", [snapshot.data.workerPlacement, snapshot.data.workerSkills]),
+                                        onPressed: () => navService.navigateTo("/worker-other", [snapshot.data.workerPlacement, snapshot.data.workerSkills]),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.users),
@@ -227,7 +240,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     Flexible(
                                       child: FlatButton(
                                         onPressed: () => showAlert(
-                                          context: null,
+                                          context: context,
                                           title: "Chat Pekerja",
                                           body: "Mohon maaf untuk sementara fitur ini belum dapat digunakan."
                                         ),
