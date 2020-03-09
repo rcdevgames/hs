@@ -312,6 +312,28 @@ class OrderBloc extends BlocBase {
     }
   }
 
+  void setArrivedWorker(BuildContext context, int idTrans) async {
+    try {
+      setLoading(true);
+      final result = await repo.setArrivedWorker(idTrans);
+      setLoading(false);
+      print(result);
+      showAlert(
+        context: context,
+        title: "Terima Kasih :)",
+        body: "Mitra kami sudah sampai ditempat Anda, semoga dapat memberikan hasil kerja yang memuaskan untuk Anda."
+      );
+    } catch (e) {
+      setLoading(false);
+      print("Upload Bukti Pembayaran : ${e.toString().replaceAll("Exception: ", "")}");
+      showAlert(
+        context: context,
+        title: "Upload Image Error",
+        body: e.toString().replaceAll("Exception: ", "")
+      );
+    }
+  }
+
   void openPDF(BuildContext context, PaymentDetail data) async {
     setLoading(true);
     var pdf = await createFileOfPdfUrl("${data.invoice}/${await sessions.load("token")}");
@@ -343,12 +365,12 @@ class OrderBloc extends BlocBase {
     flutrans.makePayment(
       MidtransTransaction(
         orderId,
-        100,
+        totalPayment,
         MidtransCustomer(userData.customerName, userData.idCustomer.toString(), userData.customerEmail, userData.customerHandphone),
         <MidtransItem>[
           MidtransItem(
               orderId,
-              100,
+              totalPayment,
               1,
               "Administrasi HS",
           )

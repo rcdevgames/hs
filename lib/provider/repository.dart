@@ -85,6 +85,7 @@ class Repository {
   Future<List<Transaction>> fetchWorkerOrder() => orderProvider.fetchWorkerOrder();
   Future<PaymentDetail> getPayment(int id) => orderProvider.getPayment(id);
   Future<List<Bank>> fetchBank() => orderProvider.fetchBank();
+  Future<String> setArrivedWorker(int idTrans) => orderProvider.setArrivedWorker(idTrans);
 
   final complaintProvider = new ComplaintProvider();
   Future<List<ComplaintCategory>> fetchComplaintCategory() => complaintProvider.fetchComplaintCategory();

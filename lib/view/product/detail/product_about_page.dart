@@ -31,7 +31,7 @@ class ProductAboutPage extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
-          child: value != null ? Html(data: value):Text(""),
+          child: Html(data: value??"<center><strong>Tidak ada keterangan pekerja</strong></center>"),
         ),
         Divider(color: Theme.of(context).primaryColor)
       ],

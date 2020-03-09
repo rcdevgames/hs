@@ -148,4 +148,15 @@ class OrderProvider {
       throw Exception(api.getContent(response.body));
     }
   }
+
+  Future<String> setArrivedWorker(int idTrans) async {
+    final response = await api.get("/customer/setArrived/$idTrans");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return api.getContent(response.body);
+    } else if(response.statusCode == 401) {
+      throw Exception("Unauthorized");
+    } else {
+      throw Exception(api.getContent(response.body));
+    }
+  }
 }
