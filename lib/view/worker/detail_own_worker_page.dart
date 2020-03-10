@@ -281,7 +281,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                       child: Text("Tukar Pekerja Ini", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
                                     ),
                                   ),
-                                  onPressed: () => navService.navigateTo("/change-worker"),
+                                  onPressed: snapshot.data.onlineRegist == true || (snapshot.data.totalDay > 0 && snapshot.data.wmoreStayIn == false) ? null : () => navService.navigateTo("/change-worker"),
                                 )
                               ],
                             ),

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutrans/flutrans.dart';
+// import 'package:flutrans/flutrans.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_alert/flutter_alert.dart';
@@ -14,6 +14,8 @@ import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
 import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/welcome/splashscreen_page.dart';
+
+import 'model/fcm_response_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +31,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // Flutter Midtrans
-  final flutrans = Flutrans();
+  // final flutrans = Flutrans();
   // Firebase Notification
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
   // Local Notification
@@ -51,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    sessions.initStreamSession();
     registerNotification();
     configLocalNotification();
     initMidtrans();
@@ -58,20 +61,29 @@ class _MyAppState extends State<MyApp> {
 
   void initMidtrans() {
     print("init Midtrans");
-    flutrans.init("Mid-client-P1zZ0rKvu19Q9RX-", "https://unitycode.site/midtrans/checkout.php/"); //Init the client ID you URL base
+    // flutrans.init("Mid-client-P1zZ0rKvu19Q9RX-", "https://unitycode.site/midtrans/checkout.php/"); //Init the client ID you URL base
     // flutrans.init("SB-Mid-client-G6DCCW7PJ27eSUSB", "https://unitycode.site/midtrans/checkout.php/", env: "sandbox"); //Init the client ID you URL base
-    flutrans.setFinishCallback(_callback); //Setup the callback when payment finished
+    // flutrans.setFinishCallback(_callback); //Setup the callback when payment finished
   }
 
   void registerNotification() async {
-    firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
+    firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) async {
+      sessions.initStreamSession();
+      var messages = await fcmResponseFromJson(jsonEncode(message));
+      sessions.setBadgesCount(messages.data.group, 1);
       print('onMessage: $message');
       showNotification(message['notification']);
       return;
-    }, onResume: (Map<String, dynamic> message) {
+    }, onResume: (Map<String, dynamic> message) async {
+      sessions.initStreamSession();
+      var messages = await fcmResponseFromJson(jsonEncode(message));
+      sessions.setBadgesCount(messages.data.group, 1);
       print('onResume: $message');
       return;
-    }, onLaunch: (Map<String, dynamic> message) {
+    }, onLaunch: (Map<String, dynamic> message) async {
+      sessions.initStreamSession();
+      var messages = await fcmResponseFromJson(jsonEncode(message));
+      sessions.setBadgesCount(messages.data.group, 1);
       print('onLaunch: $message');
       return;
     });
@@ -122,18 +134,18 @@ class _MyAppState extends State<MyApp> {
     await flutterLocalNotificationsPlugin.show(1, message['title'].toString(), message['body'].toString(), platformChannelSpecifics, payload: jsonEncode(message));
   }
 
-  Future<void> _callback(TransactionFinished finished) async {
-    navService.navigatePop();
-    if (finished.transactionCanceled) {
-      navService.navigateTo("/pay-midtrans-status", "canceled");
-    }else {
-      navService.navigateTo("/pay-midtrans-status", finished.status);
-    }
-    print("Flutrans : ${finished.transactionCanceled.toString()}");
-    print("Status : ${finished.status} | ${finished.statusMessage}");
-    print("Response : ${finished.response}");
-    print("Canceled : ${finished.transactionCanceled.toString()}");
-  }
+  // Future<void> _callback(TransactionFinished finished) async {
+  //   navService.navigatePop();
+  //   if (finished.transactionCanceled) {
+  //     navService.navigateTo("/pay-midtrans-status", "canceled");
+  //   }else {
+  //     navService.navigateTo("/pay-midtrans-status", finished.status);
+  //   }
+  //   print("Flutrans : ${finished.transactionCanceled.toString()}");
+  //   print("Status : ${finished.status} | ${finished.statusMessage}");
+  //   print("Response : ${finished.response}");
+  //   print("Canceled : ${finished.transactionCanceled.toString()}");
+  // }
   
   @override
   Widget build(BuildContext context) {

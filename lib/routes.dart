@@ -12,6 +12,7 @@ import 'package:housesolutions/view/job_inform/job_form_page.dart';
 import 'package:housesolutions/view/job_inform/job_list_page.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
 import 'package:housesolutions/view/news/list_news_page.dart';
+import 'package:housesolutions/view/order/order_preview_page.dart';
 import 'package:housesolutions/view/order/order_status_midtrans.dart';
 import 'package:housesolutions/view/product/detail/product_about_page.dart';
 import 'package:housesolutions/view/product/detail/product_certified_page.dart';
@@ -100,6 +101,9 @@ class Routes {
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => ConfirmationOrder(args[0], args[1]));
       case "/process-payment": return MaterialPageRoute(builder: (_) => LoadingPayment());
+      case "/preview": 
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => PreviewImageApprovalPage(args[0], args[1]));
       case "/detail-order": 
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => OrderDetailPage(args));

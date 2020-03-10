@@ -30,7 +30,9 @@ class JobBloc extends BlocBase {
   //Function
   Future fetchJobList() async {
     try {
-      setJobList(await repo.fetchJobList());
+      var result = await repo.fetchJobList();
+      result.sort((a, b) => b.jobCreated.compareTo(a.jobCreated));
+      setJobList(result);
     } catch (e) {
       print("Fetch Job List : ${e.toString().replaceAll('Exception: ', '')}");
       if (e.toString().contains("Unauthorized")) {
@@ -47,12 +49,14 @@ class JobBloc extends BlocBase {
       try {
         final result = await repo.createJob(_id_category.value, _title.value, _desc.value, _location.value);
         await fetchJobList();
+        setLoading(false);
         showAlert(
           context: key.currentContext,
           title: result,
           actions: [AlertAction(text: "Confirm", onPressed: navService.navigatePop)]
         );
       } catch (e) {
+        setLoading(false);
         print("Create Job : ${e.toString().replaceAll('Exception: ', '')}");
         if (e.toString().contains("Unauthorized")) {
           return navService.navigateReplaceTo("/login", "Sesi Telah Berakhir, Silakan Login Kembali.");
@@ -71,12 +75,14 @@ class JobBloc extends BlocBase {
     try {
       final result = await repo.statusJob(id, statusJob);
       await fetchJobList();
+      setLoading(false);
       showAlert(
         context: context,
         title: result,
         actions: [AlertAction(text: "Confirm", onPressed: navService.navigatePop)]
       );
     } catch (e) {
+      setLoading(false);
       print("Change Status Job : ${e.toString().replaceAll('Exception: ', '')}");
       if (e.toString().contains("Unauthorized")) {
         return navService.navigateReplaceTo("/login", "Sesi Telah Berakhir, Silakan Login Kembali.");

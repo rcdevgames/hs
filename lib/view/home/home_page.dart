@@ -13,7 +13,9 @@ import 'package:housesolutions/model/user_model.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/all_translation.dart';
 import 'package:housesolutions/util/nav_service.dart';
+import 'package:housesolutions/util/session.dart';
 import 'package:housesolutions/view/product/product_list_page.dart';
+import 'package:housesolutions/widget/badges.dart';
 import 'package:housesolutions/widget/loading.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
@@ -21,7 +23,7 @@ class HomePage extends StatelessWidget {
   final _key = GlobalKey<ScaffoldState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
-  Widget menuButton({@required String imageUrl, @required String title, void Function() onPressed}) {
+  Widget menuButton({@required String imageUrl, @required String title, void Function() onPressed, String badgesKey}) {
     return InkWell(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -31,11 +33,14 @@ class HomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                width: 50, height: 50,
-                child: Image.asset(
-                  imageUrl,
-                  width: 50, height: 50
+              Badges(
+                future: sessions.getBadgesCount(badgesKey),
+                child: SizedBox(
+                  width: 50, height: 50,
+                  child: Image.asset(
+                    imageUrl,
+                    width: 50, height: 50
+                  ),
                 ),
               ),
               SizedBox(height: 5),
@@ -128,17 +133,39 @@ class HomePage extends StatelessWidget {
                         menuButton(
                           imageUrl: R.assetsImagesOnline,
                           title: "Mitra Online",
-                          onPressed: () => navService.navigateTo("/product-category", "online")
+                          onPressed: () {
+                            sessions.clearBadgesCount("ONLINE");
+                            navService.navigateTo("/product-category", "online");
+                          },
+                          badgesKey: "ONLINE"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesJobInform,
                           title: "Request Pekerja",
-                          onPressed: () => navService.navigateTo("/job-list")
+                          onPressed: () async {
+                            var isLoggedIn = await sessions.checkAuth();
+                            if (isLoggedIn) {
+                              sessions.clearBadgesCount("JOB-INFORM");
+                              navService.navigateTo("/job-list");
+                            } else {
+                              navService.navigateTo("/login");
+                            }
+                          },
+                          badgesKey: "JOB-INFORM"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesHealty,
                           title: "Solusi Kesehatan",
-                          onPressed: () => navService.navigateTo("/news-list", 2)
+                          onPressed: () async {
+                            var isLoggedIn = await sessions.checkAuth();
+                            if (isLoggedIn) {
+                              sessions.clearBadgesCount("NHEALTY");
+                            navService.navigateTo("/news-list", 2);
+                            } else {
+                              navService.navigateTo("/login");
+                            }
+                          },
+                          badgesKey: "NHEALTY"
                         ),
                       ],
                     ),
@@ -147,17 +174,34 @@ class HomePage extends StatelessWidget {
                         menuButton(
                           imageUrl: R.assetsImagesPp,
                           title: "Mitra PP/Harian",
-                          onPressed: () => navService.navigateTo("/product-category", "pp")
+                          onPressed: () {
+                            sessions.clearBadgesCount("PP");
+                            navService.navigateTo("/product-category", "pp");
+                          },
+                          badgesKey: "PP"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesNews,
                           title: "News",
-                          onPressed: () => navService.navigateTo("/promote-list")
+                          onPressed: () {
+                            sessions.clearBadgesCount("NNEWS");
+                            navService.navigateTo("/promote-list");
+                          },
+                          badgesKey: "NNEWS"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesFamily,
                           title: "Solusi Keluarga",
-                          onPressed: () => navService.navigateTo("/news-list", 3)
+                          onPressed: () async {
+                            var isLoggedIn = await sessions.checkAuth();
+                            if (isLoggedIn) {
+                              sessions.clearBadgesCount("NFAMILY");
+                              navService.navigateTo("/news-list", 3);
+                            } else {
+                              navService.navigateTo("/login");
+                            }
+                          },
+                          badgesKey: "NFAMILY"
                         ),
                       ],
                     ),
@@ -166,17 +210,39 @@ class HomePage extends StatelessWidget {
                         menuButton(
                           imageUrl: R.assetsImagesRegular,
                           title: "Mitra Regular",
-                          onPressed: () => navService.navigateTo("/product-category", "regular")
+                          onPressed: () {
+                            sessions.clearBadgesCount("REGULAR");
+                            navService.navigateTo("/product-category", "regular");
+                          },
+                          badgesKey: "REGULAR"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesKitchen,
                           title: "Solusi Dapur",
-                          onPressed: () => navService.navigateTo("/news-list", 1)
+                          onPressed: () async {
+                            var isLoggedIn = await sessions.checkAuth();
+                            if (isLoggedIn) {
+                              sessions.clearBadgesCount("NKITCHEN");
+                              navService.navigateTo("/news-list", 1);
+                            } else {
+                              navService.navigateTo("/login");
+                            }
+                          },
+                          badgesKey: "NKITCHEN"
                         ),
                         menuButton(
                           imageUrl: R.assetsImagesNotification,
                           title: "Info",
-                          onPressed: () => navService.navigateTo("/notification")
+                          onPressed: () async {
+                            var isLoggedIn = await sessions.checkAuth();
+                            if (isLoggedIn) {
+                              sessions.clearBadgesCount("INFO");
+                              navService.navigateTo("/notification");
+                            } else {
+                              navService.navigateTo("/login");
+                            }
+                          },
+                          badgesKey: "INFO"
                         ),
                       ],
                     ),

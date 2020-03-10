@@ -2,9 +2,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:housesolutions/model/user_model.dart';
+import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 class Sessions {
   final storage = new FlutterSecureStorage();
+  StreamingSharedPreferences preferences;
+
+  initStreamSession() async {
+    preferences = await StreamingSharedPreferences.instance;
+  }
 
   Future<bool> checkAuth() async {
     // await prefs.setString("token", "a22dfeeaf7396e1a1d1e12408a6347fe80f51bfa");
@@ -33,6 +39,19 @@ class Sessions {
 
   Future<User> loadUser() async {
     return compute(userFromJson, await storage.read(key: "auth"));
+  }
+
+  Future setBadgesCount(String key, int value) async {
+    var data = await storage.read(key: key);
+    preferences.setInt(key, (data != null ? int.parse(data) : 0) + value);
+  }
+
+  Preference<int> getBadgesCount(String key) {
+    return preferences.getInt(key, defaultValue: 0);
+  }
+  
+  Future clearBadgesCount(String key) async {
+    preferences.setInt(key, 0);
   }
 }
 

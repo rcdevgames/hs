@@ -111,6 +111,7 @@ class _PaymentManualPageState extends State<PaymentManualPage> {
                               body: "Unggah bukti pembayaran dari ?",
                               barrierDismissible: true,
                               actions: [
+                                AlertAction(text: "Batal", onPressed: null),
                                 AlertAction(
                                   text: "Camera",
                                   onPressed: () => bloc.uploadImage(context, widget.idTrans, ImageSource.camera)

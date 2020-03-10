@@ -297,7 +297,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ),
                     ),
                   ),
-                  Padding(
+                  snapshot.data.transStatus == "deal" ? Padding(
                     padding: const EdgeInsets.fromLTRB(16, 10, 10, 5),
                     child: SizedBox(
                       width: double.infinity,
@@ -318,19 +318,38 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         child: Text("Pekerja sudah sampai", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                       ),
                     ),
-                  ),
-                  snapshot.data.transStatus == "active" ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        colorBrightness: Brightness.dark,
-                        onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice]) : bloc.payMidtrans(!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice, snapshot.data.idTrans.toString()),
-                        child: Text("Lakukan Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
-                      ),
-                    ),
                   ):SizedBox(),
+                  Builder(
+                    builder: (_) {
+                      if(snapshot.data.transStatus == "active" && snapshot.data.transApprovalImage == null) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Theme.of(context).primaryColor,
+                              colorBrightness: Brightness.dark,
+                              onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice]) : bloc.payMidtrans(!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice, snapshot.data.idTrans.toString()),
+                              child: Text("Lakukan Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                            ),
+                          ),
+                        );
+                      } else if (snapshot.data.transStatus == "active" && snapshot.data.transApprovalImage != null && snapshot.data.transPaymentMethod == "tf") {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Theme.of(context).primaryColor,
+                              colorBrightness: Brightness.dark,
+                              onPressed: () => navService.navigateTo("/preview", [snapshot.data.idTrans, snapshot.data.transApprovalImage]),
+                              child: Text("Cek Bukti Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                            ),
+                          ),
+                        );
+                      } return SizedBox();
+                    },
+                  ),
                   snapshot.data.transStatus == "deal" ? Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
                     child: SizedBox(

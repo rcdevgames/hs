@@ -85,6 +85,7 @@ class _JobFormPageState extends State<JobFormPage> with ValidationMixin {
                           child: TextFormField(
                             validator: validateRequired,
                             onSaved: bloc.setTitle,
+                            maxLength: 25,
                             decoration: InputDecoration(
                               labelText: "Judul",
                               labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -133,6 +134,7 @@ class _JobFormPageState extends State<JobFormPage> with ValidationMixin {
                           child: TextFormField(
                             validator: validateRequired,
                             onSaved: bloc.setLocation,
+                            maxLength: 20,
                             decoration: InputDecoration(
                               labelText: "Lokasi Penempatan",
                               labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -148,6 +150,7 @@ class _JobFormPageState extends State<JobFormPage> with ValidationMixin {
                           child: TextFormField(
                             validator: validateRequired,
                             onSaved: bloc.setDesc,
+                            maxLength: 500,
                             maxLines: 5,
                             decoration: InputDecoration(
                               labelText: "Keterangan Pekerjaan",
@@ -158,6 +161,10 @@ class _JobFormPageState extends State<JobFormPage> with ValidationMixin {
                               )
                             ),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                          child: Text("Penting !\nJangan memberi nomor telepon / alamat jelas. House Solutions tidak menjamin identias pekerja jika ada transaksi diluar aplikasi.", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
                         ),
                         Container(
                           width: double.infinity,
