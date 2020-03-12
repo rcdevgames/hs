@@ -132,8 +132,8 @@ class Routes {
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => WorkerAboutPage(args));
       case "/worker-certified":
-        var args = settings.arguments;
-        return MaterialPageRoute(builder: (_) => WorkerCertifiedPage(args));
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerCertifiedPage(args[0], args[1]));
       case "/worker-other":
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => WorkerOtherPage(args[0], args[1]));

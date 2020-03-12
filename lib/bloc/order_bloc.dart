@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cryptoutils/cryptoutils.dart';
-// import 'package:flutrans/flutrans.dart';
+import 'package:flutrans/flutrans.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
@@ -36,7 +36,7 @@ class OrderBloc extends BlocBase {
   final _paymentMethod = BehaviorSubject<String>();
   final _radio = BehaviorSubject<String>.seeded("m");
   final _totalDay = BehaviorSubject<int>();
-  // final flutrans = Flutrans();
+  final flutrans = Flutrans();
 
   // OrderBloc() {
   //   initMidtrans();
@@ -355,29 +355,29 @@ class OrderBloc extends BlocBase {
   }
 
   void payMidtrans(int totalPayment, String orderId) async {
-    // print("orderId : $orderId");
-    // print("totalPayment : $totalPayment");
-    // // initMidtrans();
-    // final userData = await sessions.loadUser();
-    // print(userData.toJson());
+    print("orderId : $orderId");
+    print("totalPayment : $totalPayment");
+    // initMidtrans();
+    final userData = await sessions.loadUser();
+    print(userData.toJson());
 
-    // //Make payment
-    // flutrans.makePayment(
-    //   MidtransTransaction(
-    //     orderId,
-    //     totalPayment,
-    //     MidtransCustomer(userData.customerName, userData.idCustomer.toString(), userData.customerEmail, userData.customerHandphone),
-    //     <MidtransItem>[
-    //       MidtransItem(
-    //           orderId,
-    //           totalPayment,
-    //           1,
-    //           "Administrasi HS",
-    //       )
-    //     ],
-    //     skipCustomer: true
-    //   ),
-    // ).catchError((err) => print("ERROR $err"));
+    //Make payment
+    flutrans.makePayment(
+      MidtransTransaction(
+        orderId,
+        totalPayment,
+        MidtransCustomer(userData.customerName, userData.idCustomer.toString(), userData.customerEmail, userData.customerHandphone),
+        <MidtransItem>[
+          MidtransItem(
+              orderId,
+              totalPayment,
+              1,
+              "Administrasi HS",
+          )
+        ],
+        skipCustomer: true
+      ),
+    ).catchError((err) => print("ERROR $err"));
   }
 
   Future<void> _callback(TransactionFinished finished) async {

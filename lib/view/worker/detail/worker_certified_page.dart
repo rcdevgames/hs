@@ -5,8 +5,9 @@ import 'package:housesolutions/r.dart';
 import 'package:housesolutions/widget/loading.dart';
 
 class WorkerCertifiedPage extends StatelessWidget {
-  List<WorkerCertificate> data;
-  WorkerCertifiedPage(this.data);
+  List<WorkerCertificate> certified;
+  List<WorkerPhoto> photos;
+  WorkerCertifiedPage(this.certified, this.photos);
 
   final _key = GlobalKey<ScaffoldState>();
   
@@ -18,26 +19,47 @@ class WorkerCertifiedPage extends StatelessWidget {
         brightness: Brightness.dark,
         title: Text("Sertifikat Pekerja"),
       ),
-      body: data.length > 0 ? SingleChildScrollView(
+      body: certified.length > 0 && photos.length > 0 ? SingleChildScrollView(
         child: Column(
-          children: data.map((certified) => Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(certified.certificateTitle),
-                    CachedNetworkImage(
-                      imageUrl: certified.certificateImage,
-                      placeholder: (ctx, s) => LoadingBlock(),
-                    )
-                  ],
+          children: List.generate(photos.length, (i) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(photos[i].title),
+                      CachedNetworkImage(
+                        imageUrl: photos[i].image,
+                        placeholder: (ctx, s) => LoadingBlock(),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )).toList(),  
+            );
+          })..addAll(List.generate(certified.length, (i) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(certified[i].certificateTitle),
+                      CachedNetworkImage(
+                        imageUrl: certified[i].certificateImage,
+                        placeholder: (ctx, s) => LoadingBlock(),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          })),  
         ),
       ) : Center(
         child: Image.asset(R.assetsImagesDataTidakTersedia),

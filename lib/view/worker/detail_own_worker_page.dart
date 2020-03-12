@@ -171,7 +171,7 @@ class _DetailOwnWorkerPageState extends State<DetailOwnWorkerPage> {
                                     ),
                                     Flexible(
                                       child: FlatButton(
-                                        onPressed: () => navService.navigateTo("/worker-certified", snapshot.data.workerCertificate),
+                                        onPressed: () => navService.navigateTo("/worker-certified", [snapshot.data.workerCertificate, snapshot.data.workerPhotos]),
                                         child: Column(
                                           children: <Widget>[
                                             Icon(FontAwesomeIcons.clipboard),
