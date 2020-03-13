@@ -1,6 +1,6 @@
-# housesolutions
+# House Solutions - Customer
 
-A new Flutter project.
+[![Codemagic build status](https://api.codemagic.io/apps/5e6af49f40bf614d33e52d56/5e6af49f40bf614d33e52d55/status_badge.svg)](https://codemagic.io/apps/5e6af49f40bf614d33e52d56/5e6af49f40bf614d33e52d55/latest_build)
 
 ## Getting Started
 
