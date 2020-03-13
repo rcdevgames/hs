@@ -186,9 +186,11 @@ packages:
   flutrans:
     dependency: "direct main"
     description:
-      name: flutrans
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: "55b2465e464a1fbb0bced53b94f643b9eefd8b04"
+      url: "https://github.com/rcdevgames/fluttrans.git"
+    source: git
     version: "0.0.4"
   flutter:
     dependency: "direct main"
