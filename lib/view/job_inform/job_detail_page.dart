@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
 import 'package:housesolutions/bloc/job_bloc.dart';
+import 'package:housesolutions/bloc/user_bloc.dart';
 import 'package:housesolutions/model/job_inform_model.dart';
 import 'package:housesolutions/r.dart';
 import 'package:housesolutions/util/nav_service.dart';
@@ -134,7 +135,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
               ]
             ), 
             backgroundColor: Theme.of(context).primaryColor,
-            label: Text(widget.data.jobPublish ? "Jangan Publikasikan":"Publikasikan", style: TextStyle(color: Colors.white))
+            label: Text(widget.data.jobPublish ? "Tutup Iklan":"Tanyangkan Iklan", style: TextStyle(color: Colors.white))
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         ),

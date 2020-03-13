@@ -12,6 +12,8 @@ import 'package:housesolutions/view/job_inform/job_form_page.dart';
 import 'package:housesolutions/view/job_inform/job_list_page.dart';
 import 'package:housesolutions/view/news/detail_news_page.dart';
 import 'package:housesolutions/view/news/list_news_page.dart';
+import 'package:housesolutions/view/order/order_preview_page.dart';
+import 'package:housesolutions/view/order/order_status_midtrans.dart';
 import 'package:housesolutions/view/product/detail/product_about_page.dart';
 import 'package:housesolutions/view/product/detail/product_certified_page.dart';
 import 'package:housesolutions/view/product/detail/product_more_page.dart';
@@ -35,6 +37,10 @@ import 'package:housesolutions/view/user/user_edit_page.dart';
 import 'package:housesolutions/view/user/user_settings_page.dart';
 import 'package:housesolutions/view/welcome/select_lang_page.dart';
 import 'package:housesolutions/view/welcome/welcome_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_about_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_certified_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_more_page.dart';
+import 'package:housesolutions/view/worker/detail/worker_other_page.dart';
 import 'package:housesolutions/view/worker/detail_own_worker_page.dart';
 import 'package:housesolutions/view/worker/request_change_worker_page.dart';
 
@@ -95,6 +101,9 @@ class Routes {
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => ConfirmationOrder(args[0], args[1]));
       case "/process-payment": return MaterialPageRoute(builder: (_) => LoadingPayment());
+      case "/preview": 
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => PreviewImageApprovalPage(args[0], args[1]));
       case "/detail-order": 
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => OrderDetailPage(args));
@@ -104,6 +113,9 @@ class Routes {
       case "/dopay-midtrans": 
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => PaymentMidtransPage());
+      case "/pay-midtrans-status": 
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => OrderStatusMidtransPage(args));
       case "/invoice": 
         List args = settings.arguments;
         return MaterialPageRoute(builder: (_) => InvoicePDF(args[0], args[1]));
@@ -113,6 +125,18 @@ class Routes {
         var args = settings.arguments;
         return MaterialPageRoute(builder: (_) => DetailOwnWorkerPage(args));
       case "/change-worker": return MaterialPageRoute(builder: (_) => RequestChangeWorkerPage());
+      case "/worker-more":
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerMorePage(args));
+      case "/worker-about":
+        var args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerAboutPage(args));
+      case "/worker-certified":
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerCertifiedPage(args[0], args[1]));
+      case "/worker-other":
+        List args = settings.arguments;
+        return MaterialPageRoute(builder: (_) => WorkerOtherPage(args[0], args[1]));
 
 
       // UserPage

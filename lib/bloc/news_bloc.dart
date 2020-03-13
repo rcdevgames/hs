@@ -81,36 +81,40 @@ class NewsBloc extends BlocBase {
   }
 
   doComment(BuildContext context, String slug, int id, String message, TextEditingController ctrl) async {
-    setLoading(true);
-    try {
-      final result = await repo.doComment(id, message);
-      await fetchDetailNews(slug);
-      setLoading(false);
-      ctrl.clear();
-    } catch (e) {
-      setLoading(false);
-      showAlert(
-        context: context,
-        title: "Terjadi Kesalahan",
-        body: e.toString().replaceAll("Exception: ", "")
-      );
+    if (ctrl.text.isNotEmpty) {
+      setLoading(true);
+      try {
+        final result = await repo.doComment(id, message);
+        await fetchDetailNews(slug);
+        setLoading(false);
+        ctrl.clear();
+      } catch (e) {
+        setLoading(false);
+        showAlert(
+          context: context,
+          title: "Terjadi Kesalahan",
+          body: e.toString().replaceAll("Exception: ", "")
+        );
+      }
     }
   }
 
   doSubComment(BuildContext context, String slug, int id, int idComment, String message, TextEditingController ctrl) async {
-    setLoading(true);
-    try {
-      final result = await repo.doSubComment(id, idComment, message);
-      await fetchDetailNews(slug);
-      setLoading(false);
-      ctrl.clear();
-    } catch (e) {
-      setLoading(false);
-      showAlert(
-        context: context,
-        title: "Terjadi Kesalahan",
-        body: e.toString().replaceAll("Exception: ", "")
-      );
+    if (ctrl.text.isNotEmpty) {
+      setLoading(true);
+      try {
+        final result = await repo.doSubComment(id, idComment, message);
+        await fetchDetailNews(slug);
+        setLoading(false);
+        ctrl.clear();
+      } catch (e) {
+        setLoading(false);
+        showAlert(
+          context: context,
+          title: "Terjadi Kesalahan",
+          body: e.toString().replaceAll("Exception: ", "")
+        );
+      }
     }
   }
 

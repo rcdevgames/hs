@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-class ProductAboutPage extends StatelessWidget {
+class WorkerAboutPage extends StatelessWidget {
   String data;
-  ProductAboutPage(this.data);
+  WorkerAboutPage(this.data);
 
   final _key = GlobalKey<ScaffoldState>();
 
@@ -31,7 +31,7 @@ class ProductAboutPage extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 5, 16, 5),
-          child: Html(data: value??"<center><strong>Tidak ada keterangan pekerja</strong></center>"),
+          child: value != null ? Html(data: value):Text(""),
         ),
         Divider(color: Theme.of(context).primaryColor)
       ],

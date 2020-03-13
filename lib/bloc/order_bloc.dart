@@ -36,6 +36,12 @@ class OrderBloc extends BlocBase {
   final _paymentMethod = BehaviorSubject<String>();
   final _radio = BehaviorSubject<String>.seeded("m");
   final _totalDay = BehaviorSubject<int>();
+  final flutrans = Flutrans();
+
+  // OrderBloc() {
+  //   initMidtrans();
+  // }
+
 
   @override
   void dispose() { 
@@ -105,6 +111,13 @@ class OrderBloc extends BlocBase {
   Function(int) get setTotalDay => _totalDay.sink.add;
 
   //Function
+  void initMidtrans() {
+    print("init Midtrans");
+    // flutrans.init("Mid-client-P1zZ0rKvu19Q9RX-", "https://unitycode.site/midtrans/checkout.php/"); //Init the client ID you URL base
+    flutrans.init("SB-Mid-client-G6DCCW7PJ27eSUSB", "https://unitycode.site/midtrans/checkout.php/"); //Init the client ID you URL base
+    flutrans.setFinishCallback(_callback); //Setup the callback when payment finished
+  }
+
   Future fetchBank() async {
     try {
       var result = await repo.fetchBank();
@@ -188,44 +201,40 @@ class OrderBloc extends BlocBase {
     }
   }
 
-  void doOrder(BuildContext context, int idWorker, int idCategory) async {
+  void doOrder(BuildContext context, int idWorker, int idCategory, num totalPayment) async {
     if (_paymentMethod.value == "tf" || _paymentMethod.value == "midtrans") {
       navService.navigateTo("/process-payment");
       setLoading(true);
-      // try {
-      //   var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value, _paymentMethod.value);
-      //   await fetchOrders();
-      //   setLoading(false);
-      //   // final flutrans = Flutrans();
-      //   // showAlert(
-      //   //   context: context,
-      //   //   title: "Order Success",
-      //   //   body: result,
-      //   //   barrierDismissible: false,
-      //   //   actions: [
-      //   //     AlertAction(
-      //   //       text: "Confirm",
-      //   //       onPressed: () {
-      //   //         var bloc = BlocProvider.getBloc<LayoutBloc>();
-      //   //         bloc.setIndex(1);
-      //   //         navService.navigatePopUntil("/main");
-      //   //       }
-      //   //     )
-      //   //   ]
-      //   // );
-      // } catch (e) {
-      //   setLoading(false);
-      //   print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
-      //   if (e.toString().contains("Unauthorized")) {
-      //     sessions.clear();
-      //     return navService.navigateReplaceTo("/login", "unauthorized");
-      //   }
-      //   showAlert(
-      //     context: context,
-      //     title: "Order Error",
-      //     body: e.toString().replaceAll("Exception: ", "")
-      //   );
-      // }
+        try {
+          var result = await repo.requestWorker(idWorker, idCategory, _totalDay.value, _paymentMethod.value);
+          await fetchOrders();
+          setLoading(false);
+          if (_paymentMethod.value == "midtrans") {
+            payMidtrans(totalPayment, result.transId);
+          }else{
+            var bloc = BlocProvider.getBloc<LayoutBloc>();
+            bloc.setIndex(2);
+            navService.navigatePopUntil("/main");
+            showAlert(
+              context: context,
+              title: "Order Success",
+              body: result.message,
+              barrierDismissible: false,
+            );
+          }
+        } catch (e) {
+          setLoading(false);
+          print("doOrder : ${e.toString().replaceAll("Exception: ", "")}");
+          if (e.toString().contains("Unauthorized")) {
+            sessions.clear();
+            return navService.navigateReplaceTo("/login", "unauthorized");
+          }
+          showAlert(
+            context: context,
+            title: "Order Error",
+            body: e.toString().replaceAll("Exception: ", "")
+          );
+        }
     }else {
       showAlert(
         context: context, 
@@ -235,7 +244,7 @@ class OrderBloc extends BlocBase {
     }
   }
 
-  void requestChangeWorker(GlobalKey<FormState> key, ) async {
+  void requestChangeWorker(GlobalKey<FormState> key) async {
     if (key.currentState.validate()) {
       key.currentState.save();
       setLoading(true);
@@ -303,6 +312,28 @@ class OrderBloc extends BlocBase {
     }
   }
 
+  void setArrivedWorker(BuildContext context, int idTrans) async {
+    try {
+      setLoading(true);
+      final result = await repo.setArrivedWorker(idTrans);
+      setLoading(false);
+      print(result);
+      showAlert(
+        context: context,
+        title: "Terima Kasih :)",
+        body: "Mitra kami sudah sampai ditempat Anda, semoga dapat memberikan hasil kerja yang memuaskan untuk Anda."
+      );
+    } catch (e) {
+      setLoading(false);
+      print("Upload Bukti Pembayaran : ${e.toString().replaceAll("Exception: ", "")}");
+      showAlert(
+        context: context,
+        title: "Upload Image Error",
+        body: e.toString().replaceAll("Exception: ", "")
+      );
+    }
+  }
+
   void openPDF(BuildContext context, PaymentDetail data) async {
     setLoading(true);
     var pdf = await createFileOfPdfUrl("${data.invoice}/${await sessions.load("token")}");
@@ -323,38 +354,38 @@ class OrderBloc extends BlocBase {
     return file;
   }
 
-  void payMidtrans(int totalPayment) async {
-    final flutrans = Flutrans();
+  void payMidtrans(int totalPayment, String orderId) async {
+    print("orderId : $orderId");
+    print("totalPayment : $totalPayment");
+    // initMidtrans();
     final userData = await sessions.loadUser();
-    
-    //Init the client ID you URL base
-    flutrans.init("Mid-client-P1zZ0rKvu19Q9RX-", "http://api.housesolutionsindonesia.com/api/v1/mid_confirm/");
-
-    //Setup the callback when payment finished
-    flutrans.setFinishCallback((finished) {
-        //finished is TransactionFinished
-        print("Status : " + finished.status + " | " + finished.statusMessage);
-        print("Response : " + finished.response);
-        print("Canceled : " + finished.transactionCanceled.toString());
-    });
+    print(userData.toJson());
 
     //Make payment
-    flutrans
-    .makePayment(
-        MidtransTransaction(
-            totalPayment,
-            MidtransCustomer(userData.customerName.split("")[0], userData.customerName.split("")[userData.customerName.split("").length -1], userData.customerEmail, userData.customerHandphone),
-            <MidtransItem>[
-              MidtransItem(
-                  "5c18ea1256f67560cb6a00cdde3c3c7a81026c29",
-                  totalPayment,
-                  1,
-                  "Administrasi HS",
-              )
-            ],
-            customField1: "ANYCUSTOMFIELD"),
-    )
-    .catchError((err) => print("ERROR $err"));
+    flutrans.makePayment(
+      MidtransTransaction(
+        orderId,
+        totalPayment,
+        MidtransCustomer(userData.customerName, userData.idCustomer.toString(), userData.customerEmail, userData.customerHandphone),
+        <MidtransItem>[
+          MidtransItem(
+              orderId,
+              totalPayment,
+              1,
+              "Administrasi HS",
+          )
+        ],
+        skipCustomer: true
+      ),
+    ).catchError((err) => print("ERROR $err"));
+  }
+
+  Future<void> _callback(TransactionFinished finished) async {
+    print(finished.toString());
+    print("Flutrans : ${finished.transactionCanceled.toString()}");
+    print("Status : ${finished.status} | ${finished.statusMessage}");
+    print("Response : ${finished.response}");
+    print("Canceled : ${finished.transactionCanceled.toString()}");
   }
 
 }

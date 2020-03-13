@@ -64,7 +64,7 @@ class _RequestChangeWorkerPage extends State<RequestChangeWorkerPage> with Valid
                     ),
                   ),
                   SizedBox(height: 15),
-                  Text("Note : \n- Proses penggantian akan memakan waktu 1-2 hari kerja.\n- Pengajuan penggantian tenaga kerja hanya dapat dilakukan maksimal 3 hari sebelum masa garansi habis.\n- Anda diwajibkan membayar gaji tenaga kerja sebelumnya dengan perhitungan prorata.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.red)),
+                  Text("Note : \n- Proses penggantian akan memakan waktu 1-10 hari kerja.\n- Pengajuan penggantian tenaga kerja hanya dapat dilakukan maksimal 3 hari sebelum masa garansi habis.\n- Anda diwajibkan membayar gaji tenaga kerja sebelumnya dengan perhitungan prorata.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.red)),
                 ],
               ),
             ),

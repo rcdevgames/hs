@@ -22,11 +22,12 @@ class ConfirmationOrder extends StatefulWidget {
 class _ConfirmationOrderState extends State<ConfirmationOrder> {
   final _key = GlobalKey<ScaffoldState>();
   final bloc = BlocProvider.getBloc<OrderBloc>();
+  var total = 0;
 
   @override
   void initState() { 
     super.initState();
-    bloc.setPaymentMethod("midtrans");
+    // bloc.setPaymentMethod("midtrans");
   }
 
   @override
@@ -48,81 +49,6 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Builder(
-            //   builder: (_) {
-            //     if (widget.data.workerMore.wmoreStayIn) return SizedBox();
-            //     if (widget.data.workerOnlineRegist) return SizedBox();
-            //     return Padding(
-            //       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            //       child: Card(
-            //         child: Container(
-            //           padding: const EdgeInsets.all(10.0),
-            //           child: StreamBuilder<String>(
-            //             initialData: "m",
-            //             stream: bloc.getRadio,
-            //             builder: (context, snapshot) {
-            //               return Row(
-            //                 children: <Widget>[
-            //                   Text("Pulang Pergi", style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 20)),
-            //                   Expanded(child: SizedBox()),
-            //                   Radio(
-            //                     groupValue: snapshot.data,
-            //                     onChanged: bloc.setRadio,
-            //                     value: "d",
-            //                   ),
-            //                   Text("Harian", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-            //                   Radio(
-            //                     groupValue: snapshot.data,
-            //                     onChanged: bloc.setRadio,
-            //                     value: "m",
-            //                   ),
-            //                   Text("Bulanan", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-            //                 ],
-            //               );
-            //             }
-            //           ),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
-            // StreamBuilder<String>(
-            //   initialData: "m",
-            //   stream: bloc.getRadio,
-            //   builder: (context, snapshot) {
-            //     if (snapshot.data == "d") {
-            //       return Padding(
-            //         padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            //         child: Card(
-            //           child: Container(
-            //             padding: const EdgeInsets.all(10.0),
-            //             child: Row(
-            //               children: <Widget>[
-            //                 Text("Jumlah Hari", style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 20)),
-            //                 Expanded(child: SizedBox()),
-            //                 StreamBuilder<int>(
-            //                   stream: bloc.getTotalDay,
-            //                   builder: (context, snapshot) {
-            //                     return DropdownButton<int>(
-            //                       value: snapshot.data,
-            //                       onChanged: bloc.setTotalDay,
-            //                       items: List.generate(30, (i) => DropdownMenuItem(
-            //                         value: i+1,
-            //                         child: Text((i+1).toString()),
-            //                       )),
-            //                     );
-            //                   }
-            //                 ),
-            //                 SizedBox(width: 10),
-            //                 Text("Hari", style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey, fontSize: 20)),
-            //               ],
-            //             ),
-            //           ),
-            //         ),
-            //       );
-            //     } return SizedBox();
-            //   }
-            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
               child: Card(
@@ -238,11 +164,16 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                               stream: bloc.getTotalDay,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
+                                  total = (int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)) * snapshot.data;
                                   return Text(rupiah((int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)) * snapshot.data), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
-                                } return Text(rupiah(int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                                } 
+                                total = int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary);
+                                return Text(rupiah(int.parse(widget.data.admPrice) + int.parse(widget.data.categoryPpSalary)), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
                               }
                             );
-                          } return Text(int.parse(widget.data.admPrice) > 50000 ? rupiah(widget.data.admPrice) : rupiah(1000000), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
+                          } 
+                          total = int.parse(widget.data.admPrice) > 50000 ? int.parse(widget.data.admPrice) : 1000000;
+                          return Text(int.parse(widget.data.admPrice) > 50000 ? rupiah(widget.data.admPrice) : rupiah(1000000), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20));
                         }
                       )
                     ],
@@ -268,7 +199,7 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                             child: ListTile(
                               onTap: () => bloc.setPaymentMethod("tf"),
                               leading: Image.asset(R.assetsImagesTf, width: 60, height: 60),
-                              title: Text("Transfer Bank"),
+                              title: Text("Transfer Bank (Manual Check)"),
                               subtitle: Text("Mandiri, BRI, BNI"),
                               trailing: snapshot.hasData && snapshot.data == "tf" ? Icon(Icons.check, color: Theme.of(context).primaryColor):null,
                               selected: snapshot.hasData && snapshot.data == "tf",
@@ -276,10 +207,11 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                           ),
                           Card(
                             child: ListTile(
-                              onTap: () => bloc.setPaymentMethod("midtrans"),
+                              onTap: Platform.isAndroid ? () => bloc.setPaymentMethod("midtrans") : null,
+                              enabled: Platform.isAndroid,
                               leading: Image.asset(R.assetsImagesMidtrans, width: 60, height: 60),
-                              title: Text("Midtrans"),
-                              subtitle: Text("Gopay, Transfer, Credit Card"),
+                              title: Text("Midtrans (Auto Check)"),
+                              subtitle: Platform.isAndroid ? Text("Gopay, Virual Account, Credit Card") : Text("Temporary not available"),
                               trailing: snapshot.hasData && snapshot.data == "midtrans" ? Icon(Icons.check, color: Theme.of(context).primaryColor):null,
                               selected: snapshot.hasData && snapshot.data == "midtrans",
                             ),
@@ -299,8 +231,8 @@ class _ConfirmationOrderState extends State<ConfirmationOrder> {
                 stream: bloc.isLoading,
                 builder: (context, snapshot) {
                   return RaisedButton(
-                    // onPressed: snapshot.data ? null : () => bloc.doOrder(context, widget.data.idWorker, widget.idCategory),
-                    onPressed: snapshot.data ? null : () => bloc.payMidtrans(10000),
+                    onPressed: snapshot.data ? null : () => bloc.doOrder(context, widget.data.idWorker, widget.idCategory, total),
+                    // onPressed: snapshot.data ? null : () => bloc.payMidtrans(total, "com.midtrans:uikit:1.21.2-SANDBOX"),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(snapshot.data ? "Memproses Trasaksi...":"Proses Transaksi", style: TextStyle(fontSize: 18)),

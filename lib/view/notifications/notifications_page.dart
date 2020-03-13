@@ -54,7 +54,7 @@ class NotificationsPage extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                     // height: 200,
                     // color: Colors.amber,
-                    child: CachedNetworkImage(
+                    child: snapshot.data[i].notifImage == null ? SizedBox() : CachedNetworkImage(
                       imageUrl: snapshot.data[i].notifImage,
                       fit: BoxFit.cover,
                       placeholder: (ctx, i) => LoadingBlock(),

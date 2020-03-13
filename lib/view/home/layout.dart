@@ -12,6 +12,7 @@ import 'package:housesolutions/view/home/home_page.dart';
 import 'package:housesolutions/view/home/order_page.dart';
 import 'package:housesolutions/view/home/user_page.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:housesolutions/widget/badges.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LayoutPage extends StatefulWidget {
@@ -84,11 +85,17 @@ class _LayoutPageState extends State<LayoutPage> {
                 title: Text(allTranslations.text("HOME"))
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.commentDots),
+                icon: Badges(
+                  future: sessions.getBadgesCount("CHAT"),
+                  child: Icon(FontAwesomeIcons.commentDots)
+                ),
                 title: Text("Chat")
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.solidListAlt),
+                icon: Badges(
+                  future: sessions.getBadgesCount("ORDER"),
+                  child: Icon(FontAwesomeIcons.solidListAlt)
+                ),
                 title: Text(allTranslations.text("TRANSACTION"))
               ),
               BottomNavigationBarItem(
@@ -108,6 +115,13 @@ class LayoutBloc extends BlocBase {
   Stream<int> get getIndex => _index.stream;
   void setIndex(int index) async {
     if (index > 0) {
+      if (index == 1) {
+        sessions.clearBadgesCount("CHAT");
+      }
+      if (index == 2) {
+        sessions.clearBadgesCount("ORDER");
+      }
+      
       var loggedIn = await sessions.checkAuth();
       if (!loggedIn) {
         navService.navigateTo("/login");

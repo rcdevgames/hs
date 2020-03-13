@@ -12,6 +12,7 @@ import 'package:housesolutions/model/news_detail_model.dart';
 import 'package:housesolutions/model/news_model.dart';
 import 'package:housesolutions/model/notice_model.dart';
 import 'package:housesolutions/model/notification.dart';
+import 'package:housesolutions/model/order_result.dart';
 import 'package:housesolutions/model/own_worker.dart';
 import 'package:housesolutions/model/payment.dart';
 import 'package:housesolutions/model/payment_detail.dart';
@@ -78,12 +79,13 @@ class Repository {
   Future<List<Payment>> fetchPayment() => orderProvider.fetchPayment();
   Future<List<OwnWorkers>> fetchMyWorkers() => orderProvider.fetchMyWorkers();
   Future<MyWorker> getMyWorker(int id) => orderProvider.getMyWorker(id);
-  Future<String> requestWorker(int idWorker, int idCategory, [int total_day = 0, String payment_method = 'tf']) => orderProvider.requestWorker(idWorker, idCategory, total_day, payment_method);
+  Future<OrderResult> requestWorker(int idWorker, int idCategory, [int total_day = 0, String payment_method = 'tf']) => orderProvider.requestWorker(idWorker, idCategory, total_day, payment_method);
   Future<String> uploadApproval(int idTrans, String image64) => orderProvider.uploadApproval(idTrans, image64);
   Future<String> changeWorker(int idTrans, int idWorker, String reason) => orderProvider.changeWorker(idTrans, idWorker, reason);
   Future<List<Transaction>> fetchWorkerOrder() => orderProvider.fetchWorkerOrder();
   Future<PaymentDetail> getPayment(int id) => orderProvider.getPayment(id);
   Future<List<Bank>> fetchBank() => orderProvider.fetchBank();
+  Future<String> setArrivedWorker(int idTrans) => orderProvider.setArrivedWorker(idTrans);
 
   final complaintProvider = new ComplaintProvider();
   Future<List<ComplaintCategory>> fetchComplaintCategory() => complaintProvider.fetchComplaintCategory();

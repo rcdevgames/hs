@@ -265,7 +265,7 @@ class UserBloc extends BlocBase {
     final layout = BlocProvider.getBloc<LayoutBloc>();
     final order = BlocProvider.getBloc<OrderBloc>();
 
-    layout.setIndex(1);
+    layout.setIndex(2);
     order.setTAB(1);
   }
 

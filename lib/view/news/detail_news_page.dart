@@ -94,7 +94,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                               Text(tanggal(news.data.newsCreated), style: TextStyle(color: Colors.grey, fontSize: 16)),
                             ],
                           ),
-                          Html(data: news.data.newsContent),
+                          Html(data: news.data.newsContent??""),
                           Divider(),
                           Text("${news.data.comments.length} Komentar", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           SizedBox(height: 5),
@@ -113,7 +113,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                                       children: <Widget>[
                                         Text(tanggal(comment.ncommentCreated)),
                                         SizedBox(height: 5),
-                                        Html(data: comment.ncommentContent),
+                                        Html(data: comment.ncommentContent??""),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: comment.subComment.map((subComment) {
@@ -127,7 +127,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                                                 children: <Widget>[
                                                   Text(tanggal(subComment.scommentCreated)),
                                                   SizedBox(height: 5),
-                                                  Html(data: subComment.scommentContent),
+                                                  Html(data: subComment.scommentContent??""),
                                                 ],
                                               ),
                                             );

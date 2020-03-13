@@ -26,12 +26,16 @@ class PaymentDetail {
     dynamic transMidCallback;
     bool transHide;
     String transTotalDay;
-    String transAdmPrice;
+    int transAdmPrice;
     String transPaymentMethod;
+    String transTrackingOthers;
+    bool transCustomerArrived;
+    String transTracking;
     String packetPrice;
     String categoryDesc;
     String invoice;
     List<Detail> detail;
+    List<Tracking> tracking;
 
     PaymentDetail({
         this.idTrans,
@@ -53,10 +57,14 @@ class PaymentDetail {
         this.transTotalDay,
         this.transAdmPrice,
         this.transPaymentMethod,
+        this.transTrackingOthers,
+        this.transCustomerArrived,
+        this.transTracking,
         this.packetPrice,
         this.categoryDesc,
         this.invoice,
         this.detail,
+        this.tracking,
     });
 
     factory PaymentDetail.fromJson(Map<String, dynamic> json) => PaymentDetail(
@@ -77,12 +85,16 @@ class PaymentDetail {
         transMidCallback: json["trans_mid_callback"],
         transHide: json["trans_hide"] == null ? null : json["trans_hide"],
         transTotalDay: json["trans_total_day"] == null ? null : json["trans_total_day"],
-        transAdmPrice: json["trans_adm_price"] == null ? null : json["trans_adm_price"],
+        transAdmPrice: json["trans_adm_price"] == null ? null : int.parse(json["trans_adm_price"].toString()),
         transPaymentMethod: json["trans_payment_method"] == null ? null : json["trans_payment_method"],
+        transTrackingOthers: json["trans_tracking_others"] == null ? null : json["trans_tracking_others"],
+        transCustomerArrived: json["trans_customer_arrived"] == null ? null : json["trans_customer_arrived"],
+        transTracking: json["trans_tracking"] == null ? null : json["trans_tracking"],
         packetPrice: json["packet_price"] == null ? null : json["packet_price"],
         categoryDesc: json["category_desc"] == null ? null : json["category_desc"],
         invoice: json["invoice"] == null ? null : json["invoice"],
         detail: json["detail"] == null ? null : List<Detail>.from(json["detail"].map((x) => Detail.fromJson(x))),
+        tracking: json["tracking"] == null ? null : List<Tracking>.from(json["tracking"].map((x) => Tracking.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -105,10 +117,14 @@ class PaymentDetail {
         "trans_total_day": transTotalDay == null ? null : transTotalDay,
         "trans_adm_price": transAdmPrice == null ? null : transAdmPrice,
         "trans_payment_method": transPaymentMethod == null ? null : transPaymentMethod,
+        "trans_tracking_others": transTrackingOthers == null ? null : transTrackingOthers,
+        "trans_customer_arrived": transCustomerArrived == null ? null : transCustomerArrived,
+        "trans_tracking": transTracking == null ? null : transTracking,
         "packet_price": packetPrice == null ? null : packetPrice,
         "category_desc": categoryDesc == null ? null : categoryDesc,
         "invoice": invoice == null ? null : invoice,
         "detail": detail == null ? null : List<dynamic>.from(detail.map((x) => x.toJson())),
+        "tracking": tracking == null ? null : List<dynamic>.from(tracking.map((x) => x.toJson())),
     };
 }
 
@@ -221,5 +237,37 @@ class Detail {
         "worker_profile": workerProfile == null ? null : workerProfile,
         "worker_salary_formatted": workerSalaryFormatted == null ? null : workerSalaryFormatted,
         "wmore_stay_in": wmoreStayIn == null ? null : wmoreStayIn,
+    };
+}
+
+class Tracking {
+    int idTtrack;
+    int idTrans;
+    String admiName;
+    String ttrackUpdated;
+    String ttrackPosition;
+
+    Tracking({
+        this.idTtrack,
+        this.idTrans,
+        this.admiName,
+        this.ttrackUpdated,
+        this.ttrackPosition,
+    });
+
+    factory Tracking.fromJson(Map<String, dynamic> json) => Tracking(
+        idTtrack: json["id_ttrack"] == null ? null : json["id_ttrack"],
+        idTrans: json["id_trans"] == null ? null : json["id_trans"],
+        admiName: json["admi_name"] == null ? null : json["admi_name"],
+        ttrackUpdated: json["ttrack_updated"] == null ? null : json["ttrack_updated"],
+        ttrackPosition: json["ttrack_position"] == null ? null : json["ttrack_position"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id_ttrack": idTtrack == null ? null : idTtrack,
+        "id_trans": idTrans == null ? null : idTrans,
+        "admi_name": admiName == null ? null : admiName,
+        "ttrack_updated": ttrackUpdated == null ? null : ttrackUpdated,
+        "ttrack_position": ttrackPosition == null ? null : ttrackPosition,
     };
 }

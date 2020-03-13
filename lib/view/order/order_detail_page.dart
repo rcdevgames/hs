@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_alert/flutter_alert.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:housesolutions/bloc/order_bloc.dart';
 import 'package:housesolutions/model/payment.dart';
@@ -39,6 +40,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     "deal": Colors.green,
     "empty": Colors.yellow,
     "expired": Colors.red,
+  };
+  
+  Map<String, String> tracking = {
+    "others": "",
+    "on_way": "Dalam Perjalanan",
+    "arrived": "Sudah Tiba",
   };
 
   @override
@@ -77,7 +84,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         children: <Widget>[
                           Text("Status", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w800, fontSize: 18)),
                           SizedBox(height: 5),
-                          Text(status[snapshot.data.transStatus], style: TextStyle(color: warna[snapshot.data.transStatus], fontWeight: FontWeight.bold, fontSize: 22)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(status[snapshot.data.transStatus], style: TextStyle(color: warna[snapshot.data.transStatus], fontWeight: FontWeight.bold, fontSize: 22)),
+                              Text(tracking[snapshot.data.transTracking], style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 22)),
+                            ],
+                          ),
                           Divider(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,7 +148,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                           Builder(
                                             builder: (_) {
                                               if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                                return Text("Gaji Harian : ${rupiah(100000)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
+                                                return Text("Gaji Harian : ${rupiah(worker.workerSalaryDaily)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
                                               }
                                               return Text("Gaji : ${rupiah(worker.workerSalary)}", style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor));
                                             }
@@ -235,7 +248,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Text("Total gaji", style: TextStyle(fontSize: 17, color: Colors.grey)),
-                                        Text(rupiah((100000*int.parse(snapshot.data.transTotalDay))), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
+                                        Text(rupiah(int.parse(snapshot.data.detail[0].workerSalaryDaily)*int.parse(snapshot.data.transTotalDay)), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600)),
                                       ],
                                     ),
                                     Divider(height: 25),
@@ -253,7 +266,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 builder: (_) {
                                   if (!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn) {
                                     if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                      return Text("(@${rupiah(snapshot.data.transAdmPrice)}) ${rupiah(int.parse(snapshot.data.transAdmPrice)*int.parse(snapshot.data.transTotalDay))}", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
+                                      return Text("${rupiah(snapshot.data.transAdmPrice)}", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
                                     }
                                     return Text(rupiah(1000000), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600));
                                   }
@@ -271,7 +284,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 builder: (_) {
                                   if (!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn) {
                                     if (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0) {
-                                      return Text(rupiah((int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay)), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
+                                      return Text(rupiah(snapshot.data.transAdmPrice + (int.parse(snapshot.data.detail[0].workerSalaryDaily) * int.parse(snapshot.data.transTotalDay))), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
                                     }
                                     return Text(rupiah(1000000), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor));
                                   }
@@ -284,20 +297,61 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ),
                     ),
                   ),
-                  snapshot.data.transStatus == "active" ? Padding(
+                  snapshot.data.transStatus == "deal" ? Padding(
                     padding: const EdgeInsets.fromLTRB(16, 10, 10, 5),
                     child: SizedBox(
                       width: double.infinity,
                       child: RaisedButton(
                         color: Theme.of(context).primaryColor,
                         colorBrightness: Brightness.dark,
-                        onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (int.parse(snapshot.data.transAdmPrice) + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : int.parse(snapshot.data.transAdmPrice)]) : navService.navigateTo("/dopay-midtrans"),
-                        child: Text("Lakukan Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                        onPressed: () {
+                          showAlert(
+                            context: context,
+                            title: "Pekerja sudah sampai",
+                            body: "Dengan ini Anda menyatakan bahwa mitra kami sudah sampai ditempat Anda. Apakah ingin melanjutkan ?",
+                            actions: [
+                              AlertAction(text: "Batal", onPressed: null),
+                              AlertAction(text: "Confirm", onPressed: () => bloc.setArrivedWorker(context, snapshot.data.idTrans))
+                            ]
+                          );
+                        },
+                        child: Text("Pekerja sudah sampai", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                       ),
                     ),
                   ):SizedBox(),
+                  Builder(
+                    builder: (_) {
+                      if(snapshot.data.transStatus == "active" && snapshot.data.transApprovalImage == null) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Theme.of(context).primaryColor,
+                              colorBrightness: Brightness.dark,
+                              onPressed: () => snapshot.data.transPaymentMethod == "tf" ? navService.navigateTo("/dopay-manual", [snapshot.data.idTrans, !snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice]) : bloc.payMidtrans(!snapshot.data.detail[0].workerOnlineRegist && !snapshot.data.detail[0].wmoreStayIn ? (snapshot.data.transTotalDay != null && int.parse(snapshot.data.transTotalDay) > 0 ? (snapshot.data.transAdmPrice + 100000) * int.parse(snapshot.data.transTotalDay) : 1000000) : snapshot.data.transAdmPrice, snapshot.data.idTrans.toString()),
+                              child: Text("Lakukan Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                            ),
+                          ),
+                        );
+                      } else if (snapshot.data.transStatus == "active" && snapshot.data.transApprovalImage != null && snapshot.data.transPaymentMethod == "tf") {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Theme.of(context).primaryColor,
+                              colorBrightness: Brightness.dark,
+                              onPressed: () => navService.navigateTo("/preview", [snapshot.data.idTrans, snapshot.data.transApprovalImage]),
+                              child: Text("Cek Bukti Pembayaran", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                            ),
+                          ),
+                        );
+                      } return SizedBox();
+                    },
+                  ),
                   snapshot.data.transStatus == "deal" ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 10, 10, 5),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 10, 5),
                     child: SizedBox(
                       width: double.infinity,
                       child: RaisedButton(

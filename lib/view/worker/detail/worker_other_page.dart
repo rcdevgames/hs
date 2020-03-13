@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_screen/responsive_screen.dart';
 
-class ProductOtherPage extends StatelessWidget {
+class WorkerOtherPage extends StatelessWidget {
   List<String> placement;
   List<String> skill;
-  ProductOtherPage(this.placement, this.skill);
+  WorkerOtherPage(this.placement, this.skill);
 
   final _key = GlobalKey<ScaffoldState>();
 
