@@ -47,7 +47,7 @@ class NotificationsPage extends StatelessWidget {
                 itemCount: snapshot.data.length,
                 separatorBuilder: (BuildContext context, int i) => Divider(),
                 itemBuilder: (BuildContext context, int i) => ListTile(
-                  onTap: snapshot.data[i].noticeId == "0" ? null : () => navService.navigateTo("/notice-detail", snapshot.data[i]),
+                  // onTap: snapshot.data[i].noticeId == "0" ? null : () => navService.navigateTo("/notice-detail", snapshot.data[i]),
                   leading: Icon(i%2 == 0 ? Icons.notifications_active:Icons.notifications),
                   title: Text(snapshot.data[i].notifContent),
                   subtitle: snapshot.data[i].noticeId == "0" ? null : Container(
